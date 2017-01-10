@@ -1,0 +1,65 @@
+{
+  "extends": "airbnb",
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "PRODUCTION": true,
+    "STAGING": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    },
+    "allowImportExportEverywhere": false
+  },
+  "rules": {
+    "react/no-multi-comp": 0,
+    "import/default": 0,
+    "import/no-duplicates": 0,
+    "import/named": 0,
+    "import/namespace": 0,
+    "import/no-unresolved": 0,
+    "import/no-named-as-default": 2,
+    "comma-dangle": 0,  // not sure why airbnb turned this on. gross!
+    "indent": [2, 2, {"SwitchCase": 1}],
+    "no-console": 0,
+    "no-alert": 0,
+    "no-multi-spaces": [2, { "exceptions": { "ImportDeclaration": true } }],
+    "no-underscore-dangle": 0,
+    "semi": [2, "always"],
+    "no-use-before-define": 0,
+    "max-len": [2, 120, 2, { "ignoreComments": true }],
+    "template-curly-spacing": [2, "always"],
+    // React rules
+    "react/prefer-es6-class": [2, "always"],
+    "react/jsx-boolean-value": [1, "always"],
+    "react/jsx-no-bind": 0,
+    "react/prefer-stateless-function": 0,
+    "react/sort-prop-types": 0,
+    "no-trailing-spaces": [2, { "skipBlankLines": true }],
+    "spaced-comment": 0,
+    "skipBlankLines": 0,
+    "consistent-return": 0,
+    "no-else-return": 0
+  },
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "settings": {
+    "import/parser": "babel-eslint",
+    "import/resolve": {
+      "moduleDirectory": ["node_modules", "src"]
+    }
+  },
+  "ecmaFeatures": {
+    "modules": true
+  }
+}
