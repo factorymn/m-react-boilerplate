@@ -1,7 +1,7 @@
 import * as actionTypes from '../constants/TestConstants';
 
 export function testAction() {
-  return dispatch => {
+  return (dispatch) => {
     setTimeout(() => {
       dispatch({
         type: actionTypes.INITIAL_CONSTANT,
