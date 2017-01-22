@@ -1,7 +1,7 @@
 import * as actionTypes from '../constants/TestConstants';
 
 const initialState = {
-  message: 'before test action'
+  message: ''
 };
 
 export default function testReducer(state = initialState, action) {
@@ -11,7 +11,7 @@ export default function testReducer(state = initialState, action) {
   } = action;
 
   switch (type) {
-    case actionTypes.INITIAL_CONSTANT:
+    case actionTypes.FETCH_DATA:
       return {
         ...state,
         message

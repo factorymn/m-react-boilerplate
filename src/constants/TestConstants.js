@@ -1,3 +1,3 @@
 const prefix = 'TEST_';
 
-export const INITIAL_CONSTANT = `${ prefix }INITIAL_CONSTANT`;
+export const FETCH_DATA = `${ prefix }FETCH_DATA`;

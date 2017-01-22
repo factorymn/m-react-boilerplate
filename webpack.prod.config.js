@@ -20,19 +20,22 @@ module.exports = function() {
       filename: '[name].[hash].js'
     },
     module: {
-      loaders: [{
-        test: /\.jsx?$/, // Transform all .js files required somewhere within an entry point...
-        loader: 'babel', // ...with the specified loaders...
-        exclude: /node_modules/ // ...except for the node_modules folder.
-      }, {
-        test: /\.styl|\.css/,
-        loader: ExtractTextPlugin.extract(
-          'style',
-          'css?importLoaders=1&localIdentName=[local]&sourceMap!autoprefixer!stylus?sourceMap')
-      }, {
-        test: /\.jpe?g$|\.gif$|\.png$/i,
-        loader: "url-loader?limit=10000"
-      },
+      loaders: [
+        {
+          test: /\.jsx?$/, // Transform all .js files required somewhere within an entry point...
+          loader: 'babel', // ...with the specified loaders...
+          exclude: /node_modules/ // ...except for the node_modules folder.
+        },
+        {
+          test: /\.styl|\.css/,
+          loader: ExtractTextPlugin.extract(
+            'style',
+            'css?importLoaders=1&localIdentName=[local]&sourceMap!autoprefixer!stylus?sourceMap')
+        },
+        {
+          test: /\.jpe?g$|\.gif$|\.png$/i,
+          loader: "url-loader?limit=10000"
+        },
         {
           test: /\.woff$/,
           loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=applicationfont-woff'

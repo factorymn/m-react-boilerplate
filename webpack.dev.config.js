@@ -1,4 +1,7 @@
 // Webpack config for development
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
@@ -6,8 +9,6 @@ var webpack = require('webpack');
 var os = require('os');
 var ifaces = os.networkInterfaces();
 var localIp = '';
-
-var port = '3018';
 
 Object.keys(ifaces).forEach(function (ifname) {
   ifaces[ifname].forEach(function (iface) {
@@ -20,29 +21,39 @@ Object.keys(ifaces).forEach(function (ifname) {
   });
 });
 
+const PARAM_SRC = '/src';
+const PARAM_PUBLIC = '/.tmp';
+
+const SOURCE_PATH = path.join(__dirname, PARAM_SRC);
+const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
+
+const PORT = require('./envConfig').PORT;
+const NODE_ENV = require('./envConfig').NODE_ENV;
+
 module.exports = {
-  port: port,
+  PORT: PORT,
   localIp: localIp,
-  context: path.resolve(__dirname, '..'),
+  SOURCE_PATH: SOURCE_PATH,
+  PUBLIC_PATH: PUBLIC_PATH,
+  context: SOURCE_PATH,
   devtool: 'cheap-eval-source-map',
   entry: {
-    'main': [
-      'webpack-dev-server/client?http://' + localIp + ':' + port,
-      'webpack/hot/dev-server',
-      './src/app.js'
+    app: [
+      './app.js',
+      'webpack-hot-middleware/client?http://' + localIp + ':' + PORT,
+      'webpack/hot/only-dev-server',
     ]
   },
   output: {
-    path: path.resolve(__dirname),
-    publicPath: 'http://' + localIp + ':' + port + '/',
-    filename: 'main.js'
+    path: PUBLIC_PATH,
+    filename: 'js/[name].js'
   },
   module: {
     loaders: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'babel'
+        loader: 'react-hot!babel'
       },
       {
         test: /\.styl|\.css$/,
@@ -91,6 +102,7 @@ module.exports = {
     ]
   },
   resolve: {
+    root: SOURCE_PATH,
     modulesDirectories: [
       'src',
       'node_modules'
@@ -98,9 +110,17 @@ module.exports = {
     extensions: ['', '.json', '.js', '.jsx']
   },
   plugins: [
+    new webpack.NoErrorsPlugin(),
+    new ExtractTextPlugin('css/[name].css'),
+    // new CopyWebpackPlugin([
+    //   { from: "images", to: "images" },
+    //   { from: "fonts", to: "fonts" }
+    // ]),
     new webpack.DefinePlugin({
-      'STAGING': process.env.NODE_ENV === 'staging',
-      'PRODUCTION': process.env.NODE_ENV === 'production'
+      'global.IS_BROWSER': true,
+      'process.env': {
+        NODE_ENV: JSON.stringify(NODE_ENV)
+      }
     }),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
     new webpack.HotModuleReplacementPlugin()

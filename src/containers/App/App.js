@@ -7,28 +7,28 @@
  */
 
 // Import stuff
-import './App.styl';
+// import './App.styl';
 
 import React, { Component, PropTypes as Type } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import ProjectRawTheme from '../../theme/material_ui_raw_theme';
-import { getMuiTheme } from 'material-ui/styles';
-import * as actions from 'actions';
+// import ProjectRawTheme from '../../theme/material_ui_raw_theme';
+// import { getMuiTheme } from 'material-ui/styles';
+import * as actions from '../../actions';
 
 class App extends Component {
   static propTypes = {
     children: Type.object
   }
 
-  static get childContextTypes() {
-    return { muiTheme: React.PropTypes.object };
-  }
-
-  getChildContext() {
-    return { muiTheme: getMuiTheme(ProjectRawTheme) };
-  }
+  // static get childContextTypes() {
+  //   return { muiTheme: React.PropTypes.object };
+  // }
+  //
+  // getChildContext() {
+  //   return { muiTheme: getMuiTheme(ProjectRawTheme) };
+  // }
 
   render() {
     return (

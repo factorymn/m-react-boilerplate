@@ -1,12 +1,19 @@
 import * as actionTypes from '../constants/TestConstants';
+import { apiCall } from '../utils';
 
-export function testAction() {
+export function fetchAction() {
+  console.log('fetch action run');
+
   return (dispatch) => {
-    setTimeout(() => {
+    apiCall({
+      method: 'GET',
+      host: 'http://beta.json-generator.com',
+      path: '/api/json/get/EyeaSD28M'
+    }).then(response => {
       dispatch({
-        type: actionTypes.INITIAL_CONSTANT,
-        message: 'after test action'
+        type: actionTypes.FETCH_DATA,
+        message: response.data.message
       });
-    }, 3500);
+    });
   };
 }

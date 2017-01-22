@@ -1,19 +1,13 @@
-/**
- *
- * app.js
- *
- * This is the entry file for the application, mostly just setup and boilerplate code
- *
- */
-
-// Import all the third party stuff
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, browserHistory } from 'react-router';
 
+import { decode } from './utils/base64';
+
+import routes from './routes';
+
 import configureStore from './store/configureStore';
-import getRoutes from './routes';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -22,22 +16,11 @@ if (!isProd) {
   window.React = React;
 }
 
-const store = configureStore();
+const initialState = window.__INITIAL_STATE__ ? JSON.parse(decode(window.__INITIAL_STATE__)) : {};
+const catchedStore = configureStore(initialState);
 
-const appComponent = (Component, props) => (
-  <Component {...props} />
-);
-
-const AppContainer = (
-  <Provider store={store}>
-    <div>
-      <Router
-        history={browserHistory}
-        children={getRoutes()}
-        createElement={appComponent}
-      />
-    </div>
+render((
+  <Provider store={catchedStore}>
+    <Router history={browserHistory} routes={routes(catchedStore)} />
   </Provider>
-);
-
-ReactDOM.render(AppContainer, document.getElementById('app'));
+), document.getElementById('app'));

@@ -1,4 +1,5 @@
-import './InitialContainer.styl';
+
+import { Link } from 'react-router';
 
 import React, {
   Component,
@@ -10,9 +11,9 @@ import { connect }                  from 'react-redux';
 
 import {
   TestActions,
-} from 'actions';
+} from '../../actions';
 
-import { DummyComponent } from 'components';
+import { DummyComponent } from '../../components';
 
 @connect(state => ({
   testData: state.testReducer
@@ -32,18 +33,26 @@ export default class InitialContainer extends Component {
    * Invokes after the initial rendering of component
    */
   componentDidMount() {
-    this.props.actions.testAction();
+    if (!this.props.testData.message) this.props.actions.fetchAction();
+  }
+
+  fetchData({ store }) {
+    store.dispatch(TestActions.fetchAction());
   }
 
   /**
    * Renders 'InitialContainer' component
    */
   render() {
-    console.log('this.props.testData.message ==>', this.props.testData.message);
-
     return (
       <div className="root">
+        message: {this.props.testData.messag}
+        <br />
         <DummyComponent />
+        <br />
+        <Link to="/another">
+          go to another page
+        </Link>
       </div>
     );
   }
