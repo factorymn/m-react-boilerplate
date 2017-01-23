@@ -87,7 +87,7 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({ // Optimize the JavaScript...
       compress: {
         warnings: false, // ...but do not show warnings in the console (there is a lot of them)
-        drop_console: true // discard calls to console.* functions in bundle file
+        drop_console: false // discard calls to console.* functions in bundle file
       }
     }),
     new ProgressPlugin(function (percentage, msg) { // eslint-disable-line one-var
