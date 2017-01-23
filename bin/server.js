@@ -25,8 +25,7 @@ if (NODE_ENV === 'production') {
   webpackConfig = require('../webpack.dev.config.js')
 }
 
-// import { PUBLIC_PATH, PORT, NODE_ENV } from '../webpack.config';
-
+const PUBLIC_PATH = webpackConfig.PUBLIC_PATH;
 const compiler = webpack(webpackConfig);
 
 console.log(`>>> LAUNCHED MODE: ${ NODE_ENV }`);
@@ -47,8 +46,8 @@ if (NODE_ENV === 'development') {
   app.use(require('webpack-hot-middleware')(compiler));
 } else {
   app.use(express.static(PUBLIC_PATH));
-
-  webpackConfig.run((err) => {
+  
+  compiler.run((err) => {
     if (err) {
       console.log(err);
     } else {

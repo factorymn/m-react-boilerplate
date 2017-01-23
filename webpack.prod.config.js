@@ -1,107 +1,119 @@
+/* eslint-disable */
+
 var path = require('path');
 var webpack = require('webpack');
-var CleanPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var ManifestPlugin = require('webpack-manifest-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
-module.exports = function() {
-  var rootPath = path.resolve(__dirname , '..');
-  var srcDir = process.env.NODE_ENV === 'production' ? 'production' : 'staging';
-  var outPath = path.join('public', srcDir);
-  
-  return {
-    context: path.resolve(__dirname , '..'),
-    devtool: 'cheap-module-source-map',
-    entry: [
-      './src/app.js' // Start with js/app.js...
+const PARAM_SRC = '/src';
+const PARAM_PUBLIC = '/.tmp';
+
+const SOURCE_PATH = path.join(__dirname, PARAM_SRC);
+const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
+
+const PORT = require('./envConfig').PORT;
+const NODE_ENV = require('./envConfig').NODE_ENV;
+
+module.exports = {
+  PORT: PORT,
+  SOURCE_PATH: SOURCE_PATH,
+  PUBLIC_PATH: PUBLIC_PATH,
+  context: SOURCE_PATH,
+  debug: false,
+  devtool: 'eval',
+  entry: {
+    app: [
+      './app.js'
+    ]
+  },
+  output: {
+    path: PUBLIC_PATH,
+    filename: 'js/[name].js'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/, // Transform all .js files required somewhere within an entry point...
+        loader: 'babel', // ...with the specified loaders...
+        exclude: /node_modules/ // ...except for the node_modules folder.
+      },
+      {
+        test: /\.styl|\.css/,
+        loader: ExtractTextPlugin.extract(
+          'style',
+          'css?importLoaders=1&localIdentName=[local]&sourceMap!autoprefixer!stylus?sourceMap')
+      },
+      {
+        test: /\.jpe?g$|\.gif$|\.png$/i,
+        loader: 'url-loader?limit=10000'
+      },
+      {
+        test: /\.woff$/,
+        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=applicationfont-woff'
+      },
+      {
+        test: /\.woff2$/,
+        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=applicationfont-woff'
+      },
+      {
+        test: /\.ttf$/,
+        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=application/octet-stream'
+      },
+      {
+        test: /\.eot$/,
+        loader: 'file?name=fonts/[name].[ext]'
+      },
+      {
+        test: /\.svg$/,
+        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=image/svg+xml'
+      }
+    ]
+  },
+  resolve: {
+    root: SOURCE_PATH,
+    modulesDirectories: [
+      'src',
+      'node_modules'
     ],
-    output: {
-      path: outPath,
-      filename: '[name].[hash].js'
-    },
-    module: {
-      loaders: [
-        {
-          test: /\.jsx?$/, // Transform all .js files required somewhere within an entry point...
-          loader: 'babel', // ...with the specified loaders...
-          exclude: /node_modules/ // ...except for the node_modules folder.
-        },
-        {
-          test: /\.styl|\.css/,
-          loader: ExtractTextPlugin.extract(
-            'style',
-            'css?importLoaders=1&localIdentName=[local]&sourceMap!autoprefixer!stylus?sourceMap')
-        },
-        {
-          test: /\.jpe?g$|\.gif$|\.png$/i,
-          loader: "url-loader?limit=10000"
-        },
-        {
-          test: /\.woff$/,
-          loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=applicationfont-woff'
-        },
-        {
-          test: /\.woff2$/,
-          loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=applicationfont-woff'
-        },
-        {
-          test: /\.ttf$/,
-          loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=application/octet-stream'
-        },
-        {
-          test: /\.eot$/,
-          loader: 'file?name=fonts/[name].[ext]'
-        },
-        {
-          test: /\.svg$/,
-          loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=image/svg+xml'
-        }
-      ]
-    },
-    resolve: {
-      modulesDirectories: [
-        'src',
-        'node_modules'
-      ],
-      extensions: ['', '.json', '.js', '.jsx', '.styl']
-    },
-    plugins: [
-      new CleanPlugin(outPath, {
-        root: rootPath
-      }),
-      new ExtractTextPlugin('[name].[hash].css'),
-      new ManifestPlugin(),
-      new webpack.DefinePlugin({
-        'process.env': {
-          // Useful to reduce the size of client-side libraries, e.g. react
-          NODE_ENV: JSON.stringify('production')
-        },
-        'STAGING': process.env.NODE_ENV === 'staging',
-        'PRODUCTION': process.env.NODE_ENV === 'production'
-      }),
-      // Optimizations
-      new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.optimize.UglifyJsPlugin({ // Optimize the JavaScript...
-        compress: {
-          warnings: false, // ...but do not show warnings in the console (there is a lot of them)
-          drop_console: true // discard calls to console.* functions in bundle file
-        }
-      })
-    ],
-    target: 'web', // Make web variables accessible to webpack, e.g. window
-    stats: {
-      colors: true,
-      hash: false,
-      version: false,
-      chunks: false,
-      children: false
-    },
-    progress: true,
+    extensions: ['', '.json', '.js', '.jsx', '.styl']
+  },
+  plugins: [
+    new ExtractTextPlugin('[name].[hash].css'),
+    new webpack.DefinePlugin({
+      'process.env': {
+        // Useful to reduce the size of client-side libraries, e.g. react
+        NODE_ENV: JSON.stringify(NODE_ENV)
+      }
+    }),
+    // Optimizations
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.UglifyJsPlugin({ // Optimize the JavaScript...
+      compress: {
+        warnings: false, // ...but do not show warnings in the console (there is a lot of them)
+        drop_console: true // discard calls to console.* functions in bundle file
+      }
+    }),
+    new ProgressPlugin(function (percentage, msg) { // eslint-disable-line one-var
+      let percents = percentage * 100,
+        percentageFormatted = String(percents).split('.').length > 1 ? (percents).toFixed(2) : percents;
     
-    stylus: {
-      import: [path.resolve(__dirname, '../src/commonStyles/commonStyles.styl')]
-    }
+      console.log(percentageFormatted + '%', msg); // eslint-disable-line no-console
+    })
+  ],
+  target: 'web', // Make web variables accessible to webpack, e.g. window
+  stats: {
+    colors: true,
+    hash: false,
+    version: false,
+    unused: true,
+    chunks: false,
+    children: false
+  },
+  progress: true,
+  stylus: {
+    import: [path.resolve(__dirname, '../src/commonStyles/commonStyles.styl')]
   }
 }

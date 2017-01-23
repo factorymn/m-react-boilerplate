@@ -7,18 +7,9 @@
   "contributors": [],
   "scripts": {
     "start": "node node_modules/babel-cli/bin/babel-node.js bin/server.js",
-    "dev": "better-npm-run start-dev",
-    "build": "better-npm-run build-staging",
-    "build-html": "webpack --config webpack/html.config.js",
+    "prod": "export NODE_ENV=production && rm -rf .tmp && npm start",
+    "prod_win": "set NODE_ENV=production && npm start",
     "lint": "eslint ./src --quiet"
-  },
-  "betterScripts": {
-    "build-staging": {
-      "command": "webpack --verbose --progress -p --config ./webpack/prod.config.js && npm run build-html && mkdir public/staging/images && cp -R images/ public/staging/images && git add .",
-      "env": {
-        "NODE_ENV": "staging"
-      }
-    }
   },
   "dependencies": {
     "autoprefixer-loader": "^3.2.0",

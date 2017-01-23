@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // Webpack config for development
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -36,6 +38,7 @@ module.exports = {
   SOURCE_PATH: SOURCE_PATH,
   PUBLIC_PATH: PUBLIC_PATH,
   context: SOURCE_PATH,
+  debug: true,
   devtool: 'cheap-eval-source-map',
   entry: {
     app: [
