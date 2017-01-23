@@ -97,11 +97,9 @@ module.exports = {
       console.log(percentageFormatted + '%', msg); // eslint-disable-line no-console
     }),
     new webpack.DefinePlugin({
+      'global.IS_BROWSER': true,
       'process.env': {
-        'global.IS_BROWSER': true,
-        'process.env': {
-          NODE_ENV: JSON.stringify(NODE_ENV)
-        }
+        NODE_ENV: JSON.stringify(NODE_ENV)
       }
     })
   ],
