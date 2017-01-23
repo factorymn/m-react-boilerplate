@@ -1,7 +1,3 @@
-
-console.log('IS_BROWSER ==>', global.IS_BROWSER);
-console.log('process.env.NODE_ENV ==>', process.env.NODE_ENV);
-
 if (global.IS_BROWSER) {
   require('./InitialContainer.styl'); // eslint-disable-line global-require
 }
