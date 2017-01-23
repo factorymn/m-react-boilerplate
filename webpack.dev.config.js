@@ -114,24 +114,23 @@ module.exports = {
   },
   plugins: [
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('css/[name].css'),
     // new CopyWebpackPlugin([
     //   { from: "images", to: "images" },
     //   { from: "fonts", to: "fonts" }
     // ]),
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       'global.IS_BROWSER': true,
       'process.env': {
         NODE_ENV: JSON.stringify(NODE_ENV)
       }
-    }),
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
-    new webpack.HotModuleReplacementPlugin()
+    })
   ],
   target: 'web', // Make web variables accessible to webpack, e.g. window
   stats: true, // Don't show stats in the console
   progress: true,
   stylus: {
-    import: [path.resolve(__dirname, '../src/commonStyles/commonStyles.styl')]
+    import: [path.join(SOURCE_PATH, '/commonStyles/commonStyles.styl')]
   },
 };

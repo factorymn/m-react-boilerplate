@@ -42,7 +42,7 @@ module.exports = {
         test: /\.styl|\.css/,
         loader: ExtractTextPlugin.extract(
           'style',
-          'css?importLoaders=1&localIdentName=[local]&sourceMap!autoprefixer!stylus?sourceMap')
+          'css?sourceMap!autoprefixer!stylus?sourceMap')
       },
       {
         test: /\.jpe?g$|\.gif$|\.png$/i,
@@ -79,13 +79,7 @@ module.exports = {
     extensions: ['', '.json', '.js', '.jsx', '.styl']
   },
   plugins: [
-    new ExtractTextPlugin('[name].[hash].css'),
-    new webpack.DefinePlugin({
-      'process.env': {
-        // Useful to reduce the size of client-side libraries, e.g. react
-        NODE_ENV: JSON.stringify(NODE_ENV)
-      }
-    }),
+    new ExtractTextPlugin('/css/[name].css'),
     // Optimizations
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
     new webpack.optimize.DedupePlugin(),
@@ -99,8 +93,16 @@ module.exports = {
     new ProgressPlugin(function (percentage, msg) { // eslint-disable-line one-var
       let percents = percentage * 100,
         percentageFormatted = String(percents).split('.').length > 1 ? (percents).toFixed(2) : percents;
-    
+      
       console.log(percentageFormatted + '%', msg); // eslint-disable-line no-console
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'global.IS_BROWSER': true,
+        'process.env': {
+          NODE_ENV: JSON.stringify(NODE_ENV)
+        }
+      }
     })
   ],
   target: 'web', // Make web variables accessible to webpack, e.g. window
@@ -114,6 +116,6 @@ module.exports = {
   },
   progress: true,
   stylus: {
-    import: [path.resolve(__dirname, '../src/commonStyles/commonStyles.styl')]
+    import: [path.join(SOURCE_PATH, '/commonStyles/commonStyles.styl')]
   }
-}
+};
