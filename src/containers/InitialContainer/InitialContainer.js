@@ -34,8 +34,8 @@ export default class InitialContainer extends Component {
   };
   
   static initialFetchData = [
-    (store) => store.dispatch(TestActions.fetchAction()),
-    (store) => store.dispatch(TestActions.anotherFetchAction())
+    ({ store }) => store.dispatch(TestActions.fetchAction()),
+    ({ store }) => store.dispatch(TestActions.anotherFetchAction())
   ];
 
   /**

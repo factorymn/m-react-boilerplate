@@ -67,6 +67,7 @@ app.use((req, res) => {
       let html = '';
 
       if (props) {
+        const { location, params } = props;
         const ContainerComponent = props.components[1];
         const fetchDataPromise = (ContainerComponent && ContainerComponent.initialFetchData)
           || (() => Promise.resolve());
@@ -91,7 +92,11 @@ app.use((req, res) => {
         };
 
         Promise
-          .all(fetchDataPromise.map(promise => promise(__store)))
+          .all(fetchDataPromise.map(promise => promise({
+            store: __store,
+            location,
+            params
+          })))
           .then(cb)
           .catch(cb);
       } else {
