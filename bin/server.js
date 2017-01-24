@@ -67,19 +67,9 @@ app.use((req, res) => {
       let html = '';
 
       if (props) {
-        let promises = [];
-        props.routes
-          .forEach(
-            (route) => {
-              if (route.component.promises) {
-                props.params.hostname = req.hostname;
-                route.component.promises(props.params)
-                  .forEach(promise => {
-                    promises.push(promise(__store.dispatch, __store.getState));
-                  });
-              }
-
-            });
+        const ContainerComponent = props.components[1];
+        const fetchDataPromise = (ContainerComponent && ContainerComponent.initialFetchData)
+          || (() => Promise.resolve());
 
         let cb = () => {
           html = {
@@ -95,19 +85,13 @@ app.use((req, res) => {
 
           html['state'] = encode(JSON.stringify(state));
 
-          if (state.app && state.app.settings) {
-            if (state.app.settings.faviconPath) {
-              html['favicon'] = state.app.settings.faviconPath;
-            }
-          }
-
           res
             .status(200)
             .render('layout', html);
         };
 
         Promise
-          .all(promises)
+          .all(fetchDataPromise.map(promise => promise(__store)))
           .then(cb)
           .catch(cb);
       } else {

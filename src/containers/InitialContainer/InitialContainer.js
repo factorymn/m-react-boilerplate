@@ -21,6 +21,7 @@ import { DummyComponent } from '../../components';
 @connect(state => ({
   testData: state.testReducer
 }), dispatch => ({
+  dispatch,
   actions: bindActionCreators(TestActions, dispatch)
 }))
 export default class InitialContainer extends Component {
@@ -31,16 +32,17 @@ export default class InitialContainer extends Component {
     actions: Type.object,
     testData: Type.object
   };
+  
+  static initialFetchData = [
+    (store) => store.dispatch(TestActions.fetchAction()),
+    (store) => store.dispatch(TestActions.anotherFetchAction())
+  ];
 
   /**
    * Invokes after the initial rendering of component
    */
   componentDidMount() {
-    if (!this.props.testData.message) this.props.actions.fetchAction();
-  }
-
-  fetchData({ store }) {
-    store.dispatch(TestActions.fetchAction());
+    // if (!this.props.testData.message) this.props.actions.fetchAction();
   }
 
   /**
@@ -49,7 +51,7 @@ export default class InitialContainer extends Component {
   render() {
     return (
       <div className="root">
-        message: {this.props.testData.messag}
+        message: {this.props.testData.message} {this.props.testData.number}
         <br />
         <DummyComponent />
         <br />
