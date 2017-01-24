@@ -70,7 +70,7 @@ app.use((req, res) => {
         const { location, params } = props;
         const ContainerComponent = props.components[1];
         const fetchDataPromise = (ContainerComponent && ContainerComponent.initialFetchData)
-          || (() => Promise.resolve());
+          || ([() => Promise.resolve()]);
 
         let cb = () => {
           html = {
