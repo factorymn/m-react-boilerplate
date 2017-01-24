@@ -42,7 +42,7 @@ export default class InitialContainer extends Component {
    * Invokes after the initial rendering of component
    */
   componentDidMount() {
-    // if (!this.props.testData.message) this.props.actions.fetchAction();
+    if (!this.props.testData.message) this.props.actions.fetchAction();
   }
 
   /**
