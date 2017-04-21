@@ -14,7 +14,7 @@ export default class DummyComponent extends Component {
    */
   render() {
     return (
-      <div>Let's write code!</div>
+      <div>Let's write codess!</div>
     );
   }
 }

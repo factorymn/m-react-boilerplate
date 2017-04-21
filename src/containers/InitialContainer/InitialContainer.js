@@ -1,7 +1,3 @@
-if (global.IS_BROWSER) {
-  require('./InitialContainer.styl'); // eslint-disable-line global-require
-}
-
 import { Link } from 'react-router';
 
 import React, {
@@ -32,7 +28,7 @@ export default class InitialContainer extends Component {
     actions: Type.object,
     testData: Type.object
   };
-  
+
   static initialFetchData = [
     ({ store }) => store.dispatch(TestActions.fetchAction()),
     ({ store }) => store.dispatch(TestActions.anotherFetchAction())
@@ -58,6 +54,7 @@ export default class InitialContainer extends Component {
         <Link to="/another">
           go to another page
         </Link>
+        {this.props.testData.foo}
       </div>
     );
   }

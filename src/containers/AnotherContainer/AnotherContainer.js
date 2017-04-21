@@ -19,7 +19,7 @@ export default class AnotherContainer extends Component {
       <div className="root">
         Another page=>
         <Link to="/">
-          go to main page
+          go to main page asdfasd sdfasda hhh1111
         </Link>
       </div>
     );

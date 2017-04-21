@@ -3,6 +3,7 @@ import * as actionTypes from '../constants/TestConstants';
 const initialState = {
   message: '',
   number: null,
+  foo: 'foo'
 };
 
 export default function testReducer(state = initialState, action) {
@@ -18,7 +19,7 @@ export default function testReducer(state = initialState, action) {
         ...state,
         message
       };
-      
+
     case actionTypes.ANOTHER_FETCH_DATA:
       return {
         ...state,

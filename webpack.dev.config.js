@@ -1,8 +1,6 @@
 /* eslint-disable */
 
 // Webpack config for development
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var fs = require('fs');
 var path = require('path');
@@ -18,7 +16,7 @@ Object.keys(ifaces).forEach(function (ifname) {
       // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
       return;
     }
-    
+
     localIp = iface.address;
   });
 });
@@ -33,93 +31,122 @@ const PORT = require('./envConfig').PORT;
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
-  PORT: PORT,
   localIp: localIp,
   SOURCE_PATH: SOURCE_PATH,
-  PUBLIC_PATH: PUBLIC_PATH,
-  context: SOURCE_PATH,
-  debug: true,
-  devtool: 'cheap-eval-source-map',
+  context: path.resolve(__dirname),
+  devtool: 'cheap-inline-module-source-map',
   entry: {
     app: [
-      './app.js',
-      'webpack-hot-middleware/client?http://' + localIp + ':' + PORT,
-      'webpack/hot/only-dev-server',
+      './src/app.js',
+      'react-hot-loader/patch',
+      'webpack-hot-middleware/client?http://' + localIp + ':' + PORT + '/',
     ]
   },
   output: {
-    path: PUBLIC_PATH,
+    path: path.resolve(__dirname),
+    publicPath: 'http://' + localIp + ':' + PORT + '/',
     filename: 'js/[name].js'
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loader: 'react-hot!babel'
+        use: [
+          {
+            loader: "babel-loader"
+          }
+        ]
       },
       {
         test: /\.styl|\.css$/,
-        loader: 'style'
-      },
-      {
-        test: /\.styl|\.css$/,
-        loader: 'css',
-        query: {
-          importLoaders: 1,
-          localIdentName: '[local]',
-          sourceMap: true
-        }
-      },
-      {
-        test: /\.styl|\.css$/,
-        loader: 'autoprefixer'
-      },
-      {
-        test: /\.styl|\.css$/,
-        exclude: /node_modules/,
-        loader: 'stylus',
-        query: {
-          sourceMap: true
-        }
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+              localIdentName: '[local]',
+              sourceMap: true
+            }
+          },
+          {
+            loader: 'autoprefixer-loader'
+          },
+          {
+            loader: 'stylus-loader',
+            options: {
+              sourceMap: true,
+              import: [path.resolve(__dirname, '../src/commonStyles/commonStyles.styl')]
+            }
+          }
+        ]
       },
       {
         test: /\.woff$/,
-        loader: 'url?limit=10000&name=[path][name].[ext]&mimetype=application/font-woff'
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '[path][name].[ext]',
+          mimetype: 'application/font-woff'
+        }
       },
       {
         test: /\.woff2$/,
-        loader: 'url?limit=10000&name=[path][name].[ext]&mimetype=application/font-woff'
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '[path][name].[ext]',
+          mimetype: 'application/font-woff'
+        }
       },
       {
         test: /\.ttf$/,
-        loader: 'url?limit=10000&name=[path][name].[ext]&mimetype=application/octet-stream'
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '[path][name].[ext]',
+          mimetype: 'application/octet-stream'
+        }
       },
       {
         test: /\.eot$/,
-        loader: 'file?name=[path][name].[ext]' },
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]'
+        }
+      },
       {
         test: /\.svg$/,
-        loader: 'url?limit=10000&name=[path][name].[ext]&mimetype=image/svg+xml'
-      }
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '[path][name].[ext]',
+          mimetype: 'image/svg+xml'
+        }
+      },
+      {
+        test: /\.(jpe?g|gif|png|)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[ext]'
+        }
+      },
     ]
   },
   resolve: {
-    root: SOURCE_PATH,
-    modulesDirectories: [
+    modules: [
       'src',
       'node_modules'
     ],
-    extensions: ['', '.json', '.js', '.jsx']
+    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx']
   },
   plugins: [
-    new webpack.NoErrorsPlugin(),
-    // new CopyWebpackPlugin([
-    //   { from: "images", to: "images" },
-    //   { from: "fonts", to: "fonts" }
-    // ]),
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
     new webpack.DefinePlugin({
       'global.IS_BROWSER': true,
       'process.env': {
@@ -129,8 +156,4 @@ module.exports = {
   ],
   target: 'web', // Make web variables accessible to webpack, e.g. window
   stats: true, // Don't show stats in the console
-  progress: true,
-  stylus: {
-    import: [path.join(SOURCE_PATH, '/commonStyles/commonStyles.styl')]
-  },
 };

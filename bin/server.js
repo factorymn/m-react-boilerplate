@@ -26,6 +26,12 @@ if (NODE_ENV === 'production') {
 }
 
 const PUBLIC_PATH = webpackConfig.PUBLIC_PATH;
+const localIp = webpackConfig.localIp;
+
+delete webpackConfig.localIp;
+delete webpackConfig.PUBLIC_PATH;
+delete webpackConfig.SOURCE_PATH;
+
 const compiler = webpack(webpackConfig);
 
 console.log(`>>> LAUNCHED MODE: ${ NODE_ENV }`);
@@ -38,15 +44,14 @@ app.set('views', path.join(__dirname, '..', 'views'));
 if (NODE_ENV === 'development') {
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
-    publicPath: '/',
-    hot: true,
-    compress: true
+    publicPath: webpackConfig.output.publicPath,
+    hot: true
   }));
 
   app.use(require('webpack-hot-middleware')(compiler));
 } else {
   app.use(express.static(PUBLIC_PATH));
-  
+
   compiler.run((err) => {
     if (err) {
       console.log(err);
@@ -108,5 +113,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.info(`==> Listening on port ${ PORT }. Open up http://${webpackConfig.localIp}:${ PORT }/ in your browser.`)
+  console.info(`==> Listening on port ${ PORT }. Open up http://${localIp}:${ PORT }/ in your browser.`)
 });
