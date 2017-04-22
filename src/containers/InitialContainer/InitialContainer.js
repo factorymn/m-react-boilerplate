@@ -1,4 +1,8 @@
-import { Link } from 'react-router';
+if (global.IS_BROWSER) {
+  require('./InitialContainer.styl'); // eslint-disable-line global-require
+}
+
+import { Link } from 'react-router-dom';
 
 import React, {
   Component,
@@ -52,7 +56,7 @@ export default class InitialContainer extends Component {
         <DummyComponent />
         <br />
         <Link to="/another">
-          go to another page
+          go to another page!
         </Link>
         {this.props.testData.foo}
       </div>

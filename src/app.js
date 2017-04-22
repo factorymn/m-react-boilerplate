@@ -1,11 +1,12 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { render, unmountComponentAtNode } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, browserHistory } from 'react-router';
+
+import { AppContainer } from 'react-hot-loader';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter } from 'react-router-redux';
 
 import { decode } from './utils/base64';
-
-import routes from './routes';
 
 import configureStore from './store/configureStore';
 
@@ -17,10 +18,43 @@ if (!isProd) {
 }
 
 const initialState = window.__INITIAL_STATE__ ? JSON.parse(decode(window.__INITIAL_STATE__)) : {};
-const catchedStore = configureStore(initialState);
+const history = createHistory();
+const catchedStore = configureStore(history, initialState);
+const mountNode = document.getElementById('app');
 
-render((
-  <Provider store={catchedStore}>
-    <Router history={browserHistory} routes={routes(catchedStore)} />
-  </Provider>
-), document.getElementById('app'));
+const renderApp = () => {
+  const App = require('./containers/App/App').default; //eslint-disable-line global-require
+
+  render((
+    <AppContainer>
+      <Provider store={catchedStore}>
+        <ConnectedRouter history={history}>
+          <App />
+        </ConnectedRouter>
+      </Provider>
+    </AppContainer>
+  ), mountNode);
+};
+
+if (module.hot) {
+  const reRenderApp = () => {
+    try {
+      renderApp();
+    } catch (error) {
+      const RedBox = require('redbox-react').default; //eslint-disable-line global-require
+
+      render(<RedBox error={error} />, mountNode);
+    }
+  };
+
+  module.hot.accept('./containers/App/App', () => {
+    setImmediate(() => {
+      // Preventing the hot reloading error from react-router
+      unmountComponentAtNode(mountNode);
+
+      reRenderApp();
+    });
+  });
+}
+
+renderApp();

@@ -1,26 +1,22 @@
-/**
- *
- * App.js
- *
- * This component is the skeleton around the actual pages, and should only
- * contain code that should be seen on all pages. (e.g. navigation bar)
- */
+import React from 'react';
 
-// Import stuff
-// import './App.styl';
-
-import React, { Component, PropTypes as Type } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { Route, Switch } from 'react-router-dom';
+import routes from '../../routes';
 
 // import ProjectRawTheme from '../../theme/material_ui_raw_theme';
 // import { getMuiTheme } from 'material-ui/styles';
-import * as actions from '../../actions';
 
-class App extends Component {
-  static propTypes = {
-    children: Type.object
-  }
+export default () => {
+  const routeWithSubRoutes = (route, index) => (
+    <Route
+      key={index}
+      exact={route.exact || false}
+      path={route.path}
+      render={props => (
+        <route.component {...props} />
+      )}
+    />
+  );
 
   // static get childContextTypes() {
   //   return { muiTheme: React.PropTypes.object };
@@ -30,22 +26,13 @@ class App extends Component {
   //   return { muiTheme: getMuiTheme(ProjectRawTheme) };
   // }
 
-  render() {
-    return (
-      <div className="app">
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-// REDUX STUFF
-// Which props do we want to inject, given the global state?
-const mapStateToProps = (state) => (state);
-
-const mapDispatchToProps = (dispatch) => ({
-  actions: bindActionCreators(actions, dispatch)
-});
-
-// Wrap the component to inject dispatch and state into it
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+  return (
+    <div className="app">
+      <Switch>
+        {
+          routes.map((route, index) => routeWithSubRoutes(route, index))
+        }
+      </Switch>
+    </div>
+  );
+};

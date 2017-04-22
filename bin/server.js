@@ -5,14 +5,17 @@ import path from 'path';
 
 import webpack from 'webpack';
 import React from 'react';
-import { renderToString as render } from 'react-dom/server';
-import { match as matcher, RouterContext } from 'react-router';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
+import { matchRoutes } from 'react-router-config';
+import createHistory from 'history/createMemoryHistory';
+import { App } from '../src/containers';
+
 import { Provider } from 'react-redux';
 
 import { encode } from '../src/utils/base64';
-
+import configureStore from '../src/store/configureStore';
 import routes from '../src/routes';
-import store from '../src/store/configureStore';
 
 let webpackConfig = null;
 
@@ -30,7 +33,6 @@ const localIp = webpackConfig.localIp;
 
 delete webpackConfig.localIp;
 delete webpackConfig.PUBLIC_PATH;
-delete webpackConfig.SOURCE_PATH;
 
 const compiler = webpack(webpackConfig);
 
@@ -62,54 +64,44 @@ if (NODE_ENV === 'development') {
 }
 
 app.use((req, res) => {
-  let __store = store({});
-  let __routes = routes(__store);
+  const history = createHistory();
+  const store = configureStore(history, {});
 
-  matcher(
-    {routes: __routes, location: req.url},
-    (err, redirect, props) => {
+  const loadBranchData = () => {
+    const branch = matchRoutes(routes, req.url);
 
-      let html = '';
+    if (!branch.length) return Promise.resolve(null);
 
-      if (props) {
-        const { location, params } = props;
-        const ContainerComponent = props.components[1];
-        const fetchDataPromise = (ContainerComponent && ContainerComponent.initialFetchData)
-          || ([() => Promise.resolve()]);
+    const ContainerComponent = branch[0].route.component;
+    const fetchDataPromise = (ContainerComponent && ContainerComponent.initialFetchData) || ([() => Promise.resolve()]);
 
-        let cb = () => {
-          html = {
-            NODE_ENV: NODE_ENV,
-            content: render(
-              <Provider store={__store}>
-                <RouterContext {...props} />
-              </Provider>
-            )
-          };
+    return Promise.all(fetchDataPromise.map(promise => promise({
+      store,
+      location: req.url
+    })));
+  };
 
-          let state = __store.getState();
+  loadBranchData().then(() => {
+    const routerContext = {};
 
-          html['state'] = encode(JSON.stringify(state));
+    const htmlContent = renderToString(
+      <Provider store={store}>
+        <StaticRouter location={req.url} context={routerContext}>
+          <App />
+        </StaticRouter>
+      </Provider>,
+    );
 
-          res
-            .status(200)
-            .render('layout', html);
-        };
+    const status = routerContext.status === '404' ? 404 : 200;
 
-        Promise
-          .all(fetchDataPromise.map(promise => promise({
-            store: __store,
-            location,
-            params
-          })))
-          .then(cb)
-          .catch(cb);
-      } else {
-        res
-          .status(500)
-          .render('error', err);
-      }
-    });
+    const html = {
+      NODE_ENV,
+      content: htmlContent,
+      state: encode(JSON.stringify(store.getState()))
+    }
+
+    res.status(status).render('layout', html);
+  });
 });
 
 app.listen(PORT, () => {

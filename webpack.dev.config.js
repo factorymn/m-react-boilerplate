@@ -1,7 +1,4 @@
 /* eslint-disable */
-
-// Webpack config for development
-
 var fs = require('fs');
 var path = require('path');
 var webpack = require('webpack');
@@ -21,25 +18,18 @@ Object.keys(ifaces).forEach(function (ifname) {
   });
 });
 
-const PARAM_SRC = '/src';
-const PARAM_PUBLIC = '/.tmp';
-
-const SOURCE_PATH = path.join(__dirname, PARAM_SRC);
-const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
-
 const PORT = require('./envConfig').PORT;
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
   localIp: localIp,
-  SOURCE_PATH: SOURCE_PATH,
   context: path.resolve(__dirname),
   devtool: 'cheap-inline-module-source-map',
   entry: {
     app: [
-      './src/app.js',
       'react-hot-loader/patch',
-      'webpack-hot-middleware/client?http://' + localIp + ':' + PORT + '/',
+      'webpack-hot-middleware/client?reload=true',
+      './src/app.js',
     ]
   },
   output: {
@@ -79,7 +69,7 @@ module.exports = {
             loader: 'stylus-loader',
             options: {
               sourceMap: true,
-              import: [path.resolve(__dirname, '../src/commonStyles/commonStyles.styl')]
+              import: [path.resolve(__dirname, './src/commonStyles/commonStyles.styl')]
             }
           }
         ]

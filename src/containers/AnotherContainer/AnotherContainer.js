@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import React, {
   Component,
@@ -19,7 +19,7 @@ export default class AnotherContainer extends Component {
       <div className="root">
         Another page=>
         <Link to="/">
-          go to main page asdfasd sdfasda hhh1111
+          go to main page
         </Link>
       </div>
     );
