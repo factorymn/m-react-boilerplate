@@ -1,8 +1,13 @@
 import React from 'react';
 
+if (global.IS_BROWSER) {
+  require('./App.styl'); //eslint-disable-line global-require
+}
+
 import { Route, Switch } from 'react-router-dom';
 import routes from '../../routes';
 
+// UNCOMMENT IF MATERIAL-UI IS USING ON THE PROJECT
 // import ProjectRawTheme from '../../theme/material_ui_raw_theme';
 // import { getMuiTheme } from 'material-ui/styles';
 

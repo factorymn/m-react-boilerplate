@@ -123,7 +123,7 @@ module.exports = {
         options: {
           name: '[path][name].[ext]'
         }
-      },
+      }
     ]
   },
   resolve: {

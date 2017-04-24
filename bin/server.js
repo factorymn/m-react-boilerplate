@@ -105,5 +105,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.info(`==> Listening on port ${ PORT }. Open up http://${localIp}:${ PORT }/ in your browser.`)
+  console.info(`==> Listening on port ${ PORT }. Open up http://${localIp || 'localhost'}:${ PORT }/ in your browser.`)
 });

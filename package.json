@@ -7,7 +7,8 @@
   "contributors": [],
   "scripts": {
     "start": "node node_modules/babel-cli/bin/babel-node.js bin/server.js",
-    "prod": "export NODE_ENV=production && rm -rf .tmp && npm start",
+    "prod": "pm2 stop appname && export NODE_ENV=production && rm -rf .tmp && pm2 start --interpreter babel-node bin/server.js --name=\"appname\" && pm2 logs appname",
+    "prod_without_stop": "export NODE_ENV=production && rm -rf .tmp && pm2 start --interpreter babel-node bin/server.js --name=\"appname\" && pm2 logs appname",
     "prod_win": "set NODE_ENV=production && npm start",
     "lint": "eslint ./src --quiet"
   },
@@ -57,6 +58,7 @@
     "react-dom": "^15.4.1",
     "react-hot-loader": "^3.0.0-beta.6",
     "react-redux": "^5.0.2",
+    "react-router": "^4.1.1",
     "react-router-config": "^1.0.0-beta.3",
     "react-router-dom": "^4.1.1",
     "react-router-redux": "5.0.0-alpha.6",

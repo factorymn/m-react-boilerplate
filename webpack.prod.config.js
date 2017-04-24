@@ -6,25 +6,20 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ProgressPlugin = require('webpack/lib/ProgressPlugin');
 
-const PARAM_SRC = '/src';
 const PARAM_PUBLIC = '/.tmp';
 
-const SOURCE_PATH = path.join(__dirname, PARAM_SRC);
+const SOURCE_PATH = path.resolve(__dirname);
 const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
 
-const PORT = require('./envConfig').PORT;
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
-  PORT: PORT,
-  SOURCE_PATH: SOURCE_PATH,
   PUBLIC_PATH: PUBLIC_PATH,
   context: SOURCE_PATH,
-  debug: false,
-  devtool: 'eval',
+  devtool: 'source-map',
   entry: {
     app: [
-      './app.js'
+      './src/app.js'
     ]
   },
   output: {
@@ -32,78 +27,128 @@ module.exports = {
     filename: 'js/[name].js'
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.jsx?$/, // Transform all .js files required somewhere within an entry point...
-        loader: 'babel', // ...with the specified loaders...
-        exclude: /node_modules/ // ...except for the node_modules folder.
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader"
+          }
+        ]
       },
       {
         test: /\.styl|\.css/,
-        loader: ExtractTextPlugin.extract(
-          'style',
-          'css?sourceMap!autoprefixer!stylus?sourceMap')
-      },
-      {
-        test: /\.jpe?g$|\.gif$|\.png$/i,
-        loader: 'url-loader?limit=10000'
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true,
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'autoprefixer-loader'
+            },
+            {
+              loader: 'stylus-loader',
+              options: {
+                sourceMap: true,
+                import: [path.resolve(__dirname, './src/commonStyles/commonStyles.styl')]
+              }
+            }
+          ]
+        })
       },
       {
         test: /\.woff$/,
-        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=applicationfont-woff'
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '/[path][name].[ext]',
+          mimetype: 'application/font-woff'
+        }
       },
       {
         test: /\.woff2$/,
-        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=applicationfont-woff'
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '/[path][name].[ext]',
+          mimetype: 'application/font-woff'
+        }
       },
       {
         test: /\.ttf$/,
-        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=application/octet-stream'
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '/[path][name].[ext]',
+          mimetype: 'application/octet-stream'
+        }
       },
       {
         test: /\.eot$/,
-        loader: 'file?name=fonts/[name].[ext]'
+        loader: 'file-loader',
+        options: {
+          name: '/[path][name].[ext]'
+        }
       },
       {
         test: /\.svg$/,
-        loader: 'url?limit=10000&name=fonts/[name].[ext]&mimetype=image/svg+xml'
-      }
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '/[path][name].[ext]',
+          mimetype: 'image/svg+xml'
+        }
+      },
+      {
+        test: /\.(jpe?g|gif|png|)$/,
+        loader: 'file-loader',
+        options: {
+          name: '/[path][name].[ext]'
+        }
+      },
     ]
   },
   resolve: {
-    root: SOURCE_PATH,
-    modulesDirectories: [
+    modules: [
       'src',
       'node_modules'
     ],
-    extensions: ['', '.json', '.js', '.jsx', '.styl']
+    extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx']
   },
   plugins: [
-    new ExtractTextPlugin('/css/[name].css'),
-    // Optimizations
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ // Optimize the JavaScript...
-      compress: {
-        warnings: false, // ...but do not show warnings in the console (there is a lot of them)
-        drop_console: false // discard calls to console.* functions in bundle file
-      }
+    new ExtractTextPlugin({
+      filename: '/css/[name].css'
     }),
-    new ProgressPlugin(function (percentage, msg) { // eslint-disable-line one-var
-      let percents = percentage * 100,
-        percentageFormatted = String(percents).split('.').length > 1 ? (percents).toFixed(2) : percents;
-      
-      console.log(percentageFormatted + '%', msg); // eslint-disable-line no-console
-    }),
+    new webpack.NoErrorsPlugin(),
+    new CopyWebpackPlugin([
+      { from: "images", to: "images" }
+    ]),
     new webpack.DefinePlugin({
-      'global.IS_BROWSER': true,
       'process.env': {
         NODE_ENV: JSON.stringify(NODE_ENV)
+      },
+      'global.IS_BROWSER': true,
+    }),
+    // Optimizations
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
+    new webpack.optimize.UglifyJsPlugin({ // Optimize the JavaScript...
+      sourceMap: true,
+      compress: {
+        warnings: false, // ...but do not show warnings in the console (there is a lot of them)
+        drop_console: true // discard calls to console.* functions in bundle file
       }
-    })
+    }),
+    new webpack.LoaderOptionsPlugin({
+      debug: false
+    }),
   ],
-  target: 'web', // Make web variables accessible to webpack, e.g. window
+  target: 'web',
   stats: {
     colors: true,
     hash: false,
@@ -111,9 +156,5 @@ module.exports = {
     unused: true,
     chunks: false,
     children: false
-  },
-  progress: true,
-  stylus: {
-    import: [path.join(SOURCE_PATH, '/commonStyles/commonStyles.styl')]
   }
 };
