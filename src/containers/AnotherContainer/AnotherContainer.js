@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 
 import React, {
-  Component,
-  // PropTypes as Type,
+  Component
 } from 'react';
+
+// import Type from 'prop-types';
 
 export default class AnotherContainer extends Component {
   /**
@@ -12,11 +13,11 @@ export default class AnotherContainer extends Component {
   static propTypes = {};
 
   /**
-   * Renders 'InitialContainer' component
+   * Renders 'AnotherContainer' component
    */
   render() {
     return (
-      <div className="root">
+      <div className="c-another-container-root">
         Another page=>
         <Link to="/">
           go to main page

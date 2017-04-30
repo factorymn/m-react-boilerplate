@@ -1,0 +1,1 @@
+babel-node --plugins system-import-transformer -- bin/server.js

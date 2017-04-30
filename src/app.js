@@ -6,6 +6,9 @@ import { AppContainer } from 'react-hot-loader';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter } from 'react-router-redux';
 
+import { AsyncComponentProvider } from 'react-async-component';
+import asyncBootstrapper from 'react-async-bootstrapper';
+
 import { decode } from './utils/base64';
 
 import configureStore from './store/configureStore';
@@ -17,23 +20,32 @@ if (!isProd) {
   window.React = React;
 }
 
+const rehydrateState = window.__ASYNC_COMPONENTS_STATE__;
 const initialState = window.__INITIAL_STATE__ ? JSON.parse(decode(window.__INITIAL_STATE__)) : {};
 const history = createHistory();
 const catchedStore = configureStore(history, initialState);
 const mountNode = document.getElementById('app');
 
+
 const renderApp = () => {
   const App = require('./containers/App/App').default; //eslint-disable-line global-require
 
-  render((
+  const app = (
     <AppContainer>
-      <Provider store={catchedStore}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
-      </Provider>
+      <AsyncComponentProvider rehydrateState={rehydrateState}>
+        <Provider store={catchedStore}>
+          <ConnectedRouter history={history}>
+            <App />
+          </ConnectedRouter>
+        </Provider>
+      </AsyncComponentProvider>
     </AppContainer>
-  ), mountNode);
+    );
+
+  asyncBootstrapper(app).then(() => {
+    // 👇 Render the app
+    render(app, mountNode);
+  });
 };
 
 if (module.hot) {

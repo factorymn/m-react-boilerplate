@@ -1,15 +1,14 @@
-/* eslint-disable */
-var fs = require('fs');
-var path = require('path');
-var webpack = require('webpack');
+import path from 'path';
+import webpack from 'webpack';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import os from 'os';
 
-var os = require('os');
-var ifaces = os.networkInterfaces();
-var localIp = '';
+const ifaces = os.networkInterfaces();
+let localIp = '';
 
-Object.keys(ifaces).forEach(function (ifname) {
-  ifaces[ifname].forEach(function (iface) {
-    if ('IPv4' !== iface.family || iface.internal !== false) {
+Object.keys(ifaces).forEach((ifname) => {
+  ifaces[ifname].forEach((iface) => {
+    if ('IPv4' !== iface.family || iface.internal !== false) { // eslint-disable-line yoda
       // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
       return;
     }
@@ -22,7 +21,7 @@ const PORT = require('./envConfig').PORT;
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
-  localIp: localIp,
+  localIp,
   context: path.resolve(__dirname),
   devtool: 'cheap-inline-module-source-map',
   entry: {
@@ -34,7 +33,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname),
-    publicPath: 'http://' + localIp + ':' + PORT + '/',
+    publicPath: `http://${ localIp }:${ PORT }/`,
     filename: 'js/[name].js'
   },
   module: {
@@ -44,7 +43,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: "babel-loader"
+            loader: 'babel-loader'
           }
         ]
       },
@@ -137,6 +136,9 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
+    new CopyWebpackPlugin([
+      { from: 'images', to: 'images' }
+    ]),
     new webpack.DefinePlugin({
       'global.IS_BROWSER': true,
       'process.env': {

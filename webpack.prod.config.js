@@ -1,20 +1,18 @@
-/* eslint-disable */
-
-var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var ProgressPlugin = require('webpack/lib/ProgressPlugin');
+import path from 'path';
+import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import StatsPlugin from 'stats-webpack-plugin';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const PARAM_PUBLIC = '/.tmp';
 
 const SOURCE_PATH = path.resolve(__dirname);
 const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
-
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
-  PUBLIC_PATH: PUBLIC_PATH,
+  PUBLIC_PATH,
   context: SOURCE_PATH,
   devtool: 'source-map',
   entry: {
@@ -24,7 +22,7 @@ module.exports = {
   },
   output: {
     path: PUBLIC_PATH,
-    filename: 'js/[name].js'
+    filename: 'js/[name].[hash].js'
   },
   module: {
     rules: [
@@ -33,7 +31,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: "babel-loader"
+            loader: 'babel-loader'
           }
         ]
       },
@@ -123,11 +121,11 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin({
-      filename: '/css/[name].css'
+      filename: '/css/[name].[hash].css'
     }),
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new CopyWebpackPlugin([
-      { from: "images", to: "images" }
+      { from: 'images', to: 'images' }
     ]),
     new webpack.DefinePlugin({
       'process.env': {
@@ -147,6 +145,11 @@ module.exports = {
     new webpack.LoaderOptionsPlugin({
       debug: false
     }),
+    new StatsPlugin('stats.json', {
+      chunkModules: false,
+      exclude: /node_modules/
+    }),
+    // new BundleAnalyzerPlugin()
   ],
   target: 'web',
   stats: {

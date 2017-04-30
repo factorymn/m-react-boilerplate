@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="/images/m-favicon.ico">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <% if (process.env.NODE_ENV === 'production')  {%>
-        <link rel="stylesheet" href="/css/app.css">
+        <link rel="stylesheet" href="<%- cssFileName %>">
     <% } %>
     <meta name="description">
     <meta name="keywords">
@@ -23,7 +23,8 @@
 </div>
 <script>
   window.__INITIAL_STATE__= "<%- state %>"
+  window.__ASYNC_COMPONENTS_STATE__ = <%- asyncState %>
 </script>
-<script src="/js/app.js"></script>
+<script src="<%- jsFileName %>"></script>
 </body>
 </html>

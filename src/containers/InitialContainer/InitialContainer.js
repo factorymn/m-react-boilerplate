@@ -6,8 +6,9 @@ import { Link } from 'react-router-dom';
 
 import React, {
   Component,
-  PropTypes as Type,
 } from 'react';
+
+import Type from 'prop-types';
 
 import { bindActionCreators }       from 'redux';
 import { connect }                  from 'react-redux';
@@ -33,11 +34,6 @@ export default class InitialContainer extends Component {
     testData: Type.object
   };
 
-  static initialFetchData = [
-    ({ store }) => store.dispatch(TestActions.fetchAction()),
-    ({ store }) => store.dispatch(TestActions.anotherFetchAction())
-  ];
-
   /**
    * Invokes after the initial rendering of component
    */
@@ -50,7 +46,7 @@ export default class InitialContainer extends Component {
    */
   render() {
     return (
-      <div className="root">
+      <div className="c-initial-container-root">
         message: {this.props.testData.message} {this.props.testData.number}
         <br />
         <DummyComponent />
