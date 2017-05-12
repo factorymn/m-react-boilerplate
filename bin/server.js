@@ -5,8 +5,11 @@ import path from 'path';
 import webpack from 'webpack';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+import Helmet from 'react-helmet';
+import minifyHTML from 'express-minify-html';
 import { StaticRouter } from 'react-router-dom';
 import { matchRoutes } from 'react-router-config';
+
 import createHistory from 'history/createMemoryHistory';
 import { App } from '../src/containers';
 
@@ -58,6 +61,19 @@ if (NODE_ENV === 'development') {
 } else {
   app.use(express.static(PUBLIC_PATH));
 
+  app.use(minifyHTML({
+    override:      true,
+    exception_url: false,
+    htmlMinifier: {
+      removeComments:            true,
+      collapseWhitespace:        true,
+      collapseBooleanAttributes: true,
+      removeAttributeQuotes:     true,
+      removeEmptyAttributes:     true,
+      minifyJS:                  true
+    }
+  }));
+
   compiler.run((err) => {
     if (err) {
       console.log(err);
@@ -86,7 +102,7 @@ app.use((req, res) => {
       </Provider>
     </AsyncComponentProvider>
   );
-  
+
   const branch = matchRoutes(routes, req.url);
 
   let promisesArray = [];
@@ -97,9 +113,17 @@ app.use((req, res) => {
       location: req.url
     })));
   }
-  
+
   Promise.all(promisesArray.concat([asyncBootstrapper(appJSX)])).then(() => {
     const appString = renderToString(appJSX);
+    const helmet = Helmet.renderStatic();
+
+    const helmetData = {
+      meta: helmet.meta.toString(),
+      title: helmet.title.toString(),
+      link: helmet.link.toString()
+    };
+
     const asyncState = asyncContext.getState();
 
     const status = routerContext.status === '404' ? 404 : 200;
@@ -110,6 +134,7 @@ app.use((req, res) => {
     const layoutData = {
       NODE_ENV,
       content: appString,
+      helmetData,
       jsFileName,
       cssFileName,
       asyncState: serialize(asyncState),

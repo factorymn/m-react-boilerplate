@@ -133,13 +133,18 @@ module.exports = {
       },
       'global.IS_BROWSER': true,
     }),
-    // Optimizations
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
     new webpack.optimize.UglifyJsPlugin({ // Optimize the JavaScript...
       sourceMap: true,
+      mangle: true,
       compress: {
-        warnings: false, // ...but do not show warnings in the console (there is a lot of them)
-        drop_console: true // discard calls to console.* functions in bundle file
+        sequences: true,
+        dead_code: true,
+        conditionals: true,
+        booleans: true,
+        unused: true,
+        if_return: true,
+        join_vars: true,
+        drop_console: true
       }
     }),
     new webpack.LoaderOptionsPlugin({
@@ -148,6 +153,10 @@ module.exports = {
     new StatsPlugin('stats.json', {
       chunkModules: false,
       exclude: /node_modules/
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      async: true,
+      children: true
     }),
     // new BundleAnalyzerPlugin()
   ],

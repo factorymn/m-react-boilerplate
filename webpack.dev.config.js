@@ -135,7 +135,6 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /ru|en-gb/),
     new CopyWebpackPlugin([
       { from: 'images', to: 'images' }
     ]),
@@ -144,6 +143,10 @@ module.exports = {
       'process.env': {
         NODE_ENV: JSON.stringify(NODE_ENV)
       }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      async: true,
+      children: true
     })
   ],
   target: 'web', // Make web variables accessible to webpack, e.g. window

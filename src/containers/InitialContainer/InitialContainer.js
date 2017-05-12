@@ -3,6 +3,7 @@ if (global.IS_BROWSER) {
 }
 
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 import React, {
   Component,
@@ -47,6 +48,13 @@ export default class InitialContainer extends Component {
   render() {
     return (
       <div className="c-initial-container-root">
+        <Helmet>
+          <title>Manufactura boilerplate</title>
+          <meta property="og:title" content="Manufactura boilerplate" />
+          <meta property="og:image" content="http://factory.mn/freeze/uUVpNVS2rspdiyDx-6nOkyIct4A.jpg" />
+          <meta property="og:description" content="Boilerplate with server side rendering" />
+          <link rel="canonical" href="http://mysite.com/example" />
+        </Helmet>
         message: {this.props.testData.message} {this.props.testData.number}
         <br />
         <DummyComponent />

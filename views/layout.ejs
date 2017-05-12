@@ -8,12 +8,10 @@
     <% if (process.env.NODE_ENV === 'production')  {%>
         <link rel="stylesheet" href="<%- cssFileName %>">
     <% } %>
-    <meta name="description">
-    <meta name="keywords">
+    <%- helmetData.meta %>
+    <%- helmetData.link %>
+    <%- helmetData.title %>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-        M React Boilerplate
-    </title>
 </head>
 <body>
 <div id="app">
