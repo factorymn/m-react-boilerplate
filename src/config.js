@@ -1,6 +1,6 @@
 export default {
   extremeSupportedBrowsers: {
-    Chrome: 137,
+    Chrome: 37,
     IE: 10,
     Safari: 7,
     Opera: 39,
