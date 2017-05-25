@@ -12,6 +12,9 @@ import { matchRoutes } from 'react-router-config';
 
 import createHistory from 'history/createMemoryHistory';
 import { App } from '../src/containers';
+import config from '../src/config';
+import isSupportedBrowser from '../src/utils/isSupportedBrowser';
+import fs from 'fs';
 
 import { Provider } from 'react-redux';
 
@@ -42,6 +45,7 @@ delete webpackConfig.localIp;
 delete webpackConfig.PUBLIC_PATH;
 
 const compiler = webpack(webpackConfig);
+const isProduction = NODE_ENV === 'production';
 
 console.log(`>>> LAUNCHED MODE: ${ NODE_ENV }`);
 
@@ -50,7 +54,7 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'views'));
 
-if (NODE_ENV === 'development') {
+if (!isProduction) {
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath,
@@ -86,6 +90,18 @@ if (NODE_ENV === 'development') {
 }
 
 app.use((req, res) => {
+  if (isProduction && !isSupportedBrowser(req.headers['user-agent'], config.extremeSupportedBrowsers)) {
+    fs.readFile(path.join(__dirname, '..', 'views', '../views/non_supported_browsers.html'), 'utf8', (err, content) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+
+      res.send(content);
+    });
+
+    return;
+  }
+
   const history = createHistory();
   const store = configureStore(history, {});
 

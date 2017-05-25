@@ -82,6 +82,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "svg-react-loader": "^0.3.3",
+    "ua-parser-js": "^0.7.12",
     "url-loader": "^0.5.6",
     "webpack": "^2.4.1",
     "webpack-bundle-analyzer": "^2.7.0",
