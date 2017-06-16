@@ -21,17 +21,17 @@ if (!isProd) {
 }
 
 const rehydrateState = window.__ASYNC_COMPONENTS_STATE__;
-const initialState = window.__INITIAL_STATE__ ? JSON.parse(decode(window.__INITIAL_STATE__)) : {};
-const history = createHistory();
-const catchedStore = configureStore(history, initialState);
 const mountNode = document.getElementById('app');
-
 
 const renderApp = () => {
   const App = require('./containers/App/App').default; //eslint-disable-line global-require
 
+  const initialState = window.__INITIAL_STATE__ ? JSON.parse(decode(window.__INITIAL_STATE__)) : {};
+  const history = createHistory();
+  const catchedStore = configureStore(history, initialState);
+
   const app = (
-    <AppContainer>
+    <AppContainer key={Math.random()}>
       <AsyncComponentProvider rehydrateState={rehydrateState}>
         <Provider store={catchedStore}>
           <ConnectedRouter history={history}>
@@ -40,15 +40,14 @@ const renderApp = () => {
         </Provider>
       </AsyncComponentProvider>
     </AppContainer>
-    );
+  );
 
   asyncBootstrapper(app).then(() => {
-    // 👇 Render the app
     render(app, mountNode);
   });
 };
 
-if (module.hot) {
+if (process.env.NODE_ENV === 'development' && module.hot) {
   const reRenderApp = () => {
     try {
       renderApp();

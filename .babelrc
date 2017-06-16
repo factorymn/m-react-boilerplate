@@ -1,12 +1,8 @@
 {
   "env": {
-    "development": {
-      "plugins": [
-        "react-hot-loader/babel"
-      ]
-    },
     "production": {
       "plugins": [
+        "transform-es2015-modules-commonjs",
         "transform-react-remove-prop-types",
         "transform-react-constant-elements",
         "transform-react-inline-elements"
@@ -16,8 +12,7 @@
   "plugins": [
     "transform-decorators-legacy",
     "transform-class-properties",
-    "transform-object-rest-spread",
-    "transform-es2015-modules-commonjs",
+    "transform-object-rest-spread"
   ],
   "presets": [
     ["es2015", { "modules": false }],

@@ -30,7 +30,8 @@ let webpackConfig = null;
 let webpackStats = null;
 
 const NODE_ENV = require('../envConfig').NODE_ENV;
-const PORT = require('../envConfig').PORT;
+const PORT = require('../envConfig').PORT - 1;
+const LOCAL_IP = require('../envConfig').LOCAL_IP;
 
 if (NODE_ENV === 'production') {
   webpackConfig = require('../webpack.prod.config.js');
@@ -38,31 +39,24 @@ if (NODE_ENV === 'production') {
   webpackConfig = require('../webpack.dev.config.js');
 }
 
-const PUBLIC_PATH = webpackConfig.PUBLIC_PATH;
-const localIp = webpackConfig.localIp;
+let pathToJSFile = `//${ LOCAL_IP }:${ PORT }/js/app.js`;
 
-delete webpackConfig.localIp;
+const PUBLIC_PATH = webpackConfig.PUBLIC_PATH;
+
 delete webpackConfig.PUBLIC_PATH;
 
 const compiler = webpack(webpackConfig);
 const isProduction = NODE_ENV === 'production';
 
-console.log(`>>> LAUNCHED MODE: ${ NODE_ENV }`);
-
 const app = express();
 
+console.log(`>>> LAUNCHED MODE: ${ NODE_ENV }`);
+
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '..', 'views'));
 
-if (!isProduction) {
-  app.use(require('webpack-dev-middleware')(compiler, {
-    noInfo: true,
-    publicPath: webpackConfig.output.publicPath,
-    hot: true
-  }));
+app.set('views', path.join(process.cwd(), 'views'));
 
-  app.use(require('webpack-hot-middleware')(compiler));
-} else {
+if (isProduction) {
   app.use(express.static(PUBLIC_PATH));
 
   app.use(minifyHTML({
@@ -89,7 +83,7 @@ if (!isProduction) {
   });
 }
 
-app.use((req, res) => {
+app.get('*', (req, res) => {
   if (isProduction && !isSupportedBrowser(req.headers['user-agent'], config.extremeSupportedBrowsers)) {
     fs.readFile(path.join(__dirname, '..', 'views', '../views/non_supported_browsers.html'), 'utf8', (err, content) => {
       if (err) {
@@ -144,14 +138,17 @@ app.use((req, res) => {
 
     const status = routerContext.status === '404' ? 404 : 200;
 
-    const jsFileName = webpackStats ? webpackStats.assetsByChunkName.app[0] : '/js/app.js';
+    if (webpackStats) {
+      pathToJSFile = webpackStats.assetsByChunkName.app[0];
+    }
+
     const cssFileName = webpackStats ? webpackStats.assetsByChunkName.app[1] : '/css/app.css';
 
     const layoutData = {
       NODE_ENV,
+      pathToJSFile,
       content: appString,
       helmetData,
-      jsFileName,
       cssFileName,
       asyncState: serialize(asyncState),
       state: encode(JSON.stringify(store.getState()))
@@ -161,7 +158,4 @@ app.use((req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.info(`==> Listening on port ${ PORT }.
-    Open up http://${ localIp || 'localhost' }:${ PORT }/ in your browser.`);
-});
+export default app;

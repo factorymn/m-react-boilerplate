@@ -1,46 +1,43 @@
-import path from 'path';
-import webpack from 'webpack';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import os from 'os';
+const path = require('path');
+const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const ifaces = os.networkInterfaces();
-let localIp = '';
-
-Object.keys(ifaces).forEach((ifname) => {
-  ifaces[ifname].forEach((iface) => {
-    if ('IPv4' !== iface.family || iface.internal !== false) { // eslint-disable-line yoda
-      // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
-      return;
-    }
-
-    localIp = iface.address;
-  });
-});
-
-const PORT = require('./envConfig').PORT;
+const PORT = require('./envConfig').PORT - 1;
+const LOCAL_IP = require('./envConfig').LOCAL_IP;
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
-  localIp,
   context: path.resolve(__dirname),
-  devtool: 'cheap-inline-module-source-map',
+  devtool: '"inline-source-map',
   entry: {
     app: [
       'react-hot-loader/patch',
-      'webpack-hot-middleware/client?reload=true',
+      'webpack-dev-server/client?http://' + LOCAL_IP + ':' + PORT + '',
+      "webpack/hot/only-dev-server",
       './src/app.js',
     ]
   },
+  devServer: {
+    host: LOCAL_IP,
+    port: PORT,
+    historyApiFallback: true,
+    hot: true,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    }
+  },
   output: {
-    path: path.resolve(__dirname),
-    publicPath: `http://${ localIp }:${ PORT }/`,
+    path: path.join(__dirname, ".build"),
+    publicPath: 'http://' + LOCAL_IP + ':' + PORT + '/',
     filename: 'js/[name].js'
   },
   module: {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
+        include: [path.join(__dirname, "src")],
         use: [
           {
             loader: 'babel-loader'

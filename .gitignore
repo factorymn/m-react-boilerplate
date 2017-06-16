@@ -7,3 +7,4 @@ yarn.lock
 log/*
 smarticon-frontend.zip
 public/staging
+.build

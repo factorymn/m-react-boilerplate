@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="/images/m-favicon.ico">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <% if (process.env.NODE_ENV === 'production')  {%>
+    <% if (NODE_ENV === 'production')  {%>
         <link rel="stylesheet" href="<%- cssFileName %>">
     <% } %>
     <%- helmetData.meta %>
@@ -23,6 +23,6 @@
   window.__INITIAL_STATE__= "<%- state %>"
   window.__ASYNC_COMPONENTS_STATE__ = <%- asyncState %>
 </script>
-<script src="<%- jsFileName %>"></script>
+<script src="<%- pathToJSFile %>"></script>
 </body>
 </html>
