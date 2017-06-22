@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import StatsPlugin from 'stats-webpack-plugin';
-// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const PARAM_PUBLIC = '/.tmp';
 
@@ -14,7 +14,7 @@ const NODE_ENV = require('./envConfig').NODE_ENV;
 module.exports = {
   PUBLIC_PATH,
   context: SOURCE_PATH,
-  devtool: 'source-map',
+  devtool: 'hidden-source-map',
   entry: {
     app: [
       './src/app.js'
@@ -124,6 +124,7 @@ module.exports = {
       filename: '/css/[name].[hash].css'
     }),
     new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.optimize.ModuleConcatenationPlugin(),
     new CopyWebpackPlugin([
       { from: 'images', to: 'images' }
     ]),
@@ -158,7 +159,7 @@ module.exports = {
       async: true,
       children: true
     }),
-    // new BundleAnalyzerPlugin()
+    new BundleAnalyzerPlugin()
   ],
   target: 'web',
   stats: {

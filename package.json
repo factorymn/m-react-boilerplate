@@ -86,7 +86,7 @@
     "svg-react-loader": "^0.3.3",
     "ua-parser-js": "^0.7.12",
     "url-loader": "^0.5.6",
-    "webpack": "^2.6.1",
+    "webpack": "3.0.0",
     "webpack-bundle-analyzer": "^2.7.0",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.5",
