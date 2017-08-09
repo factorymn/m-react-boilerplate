@@ -35,7 +35,7 @@ const PARAM_PUBLIC = '/.tmp';
 
 const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
 
-let webpackStats = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.tmp/stats.json'), 'utf8'));
+let webpackStats = null;
 
 const isProduction = NODE_ENV === 'production';
 
@@ -62,6 +62,8 @@ if (isProduction) {
       minifyJS:                  true
     }
   }));
+
+  JSON.parse(fs.readFileSync(path.join(process.cwd(), '.tmp/stats.json'), 'utf8'));
 }
 
 app.get('*', (req, res) => {
