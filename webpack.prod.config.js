@@ -10,6 +10,8 @@ const PARAM_PUBLIC = '/.tmp';
 const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
 const SOURCE_PATH = path.resolve(__dirname);
 const NODE_ENV = require('./envConfig').NODE_ENV;
+const PORT = require('./envConfig').PORT;
+const LOCAL_IP = require('./envConfig').LOCAL_IP;
 
 module.exports = {
   context: SOURCE_PATH,
@@ -21,6 +23,7 @@ module.exports = {
   },
   output: {
     path: PUBLIC_PATH,
+    publicPath: 'http://' + LOCAL_IP + ':' + PORT + '/',
     filename: 'js/[name].[hash].js'
   },
   module: {

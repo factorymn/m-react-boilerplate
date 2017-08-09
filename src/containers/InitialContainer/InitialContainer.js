@@ -61,7 +61,7 @@ export default class InitialContainer extends Component {
         <br />
         <DummyComponent />
         <br />
-        <Link to="/another">
+        <Link to="/another/test">
           go to another page!
           <IconFlag />
         </Link>

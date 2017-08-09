@@ -23,7 +23,7 @@ export default [
     component: AsyncInitialContainer,
   },
   {
-    path: '/another',
+    path: '/another/test',
     exact: true,
     component: AsyncAnotherContainer,
   }
