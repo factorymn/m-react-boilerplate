@@ -1,3 +1,7 @@
+if (global.IS_BROWSER) {
+  require('./AnotherContainer.styl'); // eslint-disable-line global-require
+}
+
 import { Link } from 'react-router-dom';
 
 import React, {
