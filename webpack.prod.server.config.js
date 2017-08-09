@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const path = require("path");
-const StartServerPlugin = require("start-server-webpack-plugin");
 const NODE_ENV = require('./envConfig').NODE_ENV;
 const nodeExternals = require("webpack-node-externals");
 

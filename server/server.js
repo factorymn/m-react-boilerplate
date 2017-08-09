@@ -33,7 +33,7 @@ let pathToJSFile = `//${ LOCAL_IP }:${ PORT }/js/app.js`;
 
 const PARAM_PUBLIC = '/.tmp';
 
-const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
+const PUBLIC_PATH = path.join(process.cwd(), PARAM_PUBLIC);
 
 let webpackStats = null;
 
@@ -63,7 +63,7 @@ if (isProduction) {
     }
   }));
 
-  JSON.parse(fs.readFileSync(path.join(process.cwd(), '.tmp/stats.json'), 'utf8'));
+  webpackStats = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.tmp/stats.json'), 'utf8'));
 }
 
 app.get('*', (req, res) => {

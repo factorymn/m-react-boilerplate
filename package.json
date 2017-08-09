@@ -9,7 +9,7 @@
     "start": "npm-run-all --parallel start:client start:server",
     "start:client": "webpack-dev-server --config webpack.dev.config.js",
     "start:server": "rm -rf ./.build && webpack --config webpack.dev.server.config.js",
-    "prod": "rm -rf .tmp && export NODE_ENV=production && npm-run-all prod:client prod:server && pm2 start .tmp/server.js --name=\"appname\"",
+    "prod": "rm -rf .tmp && export NODE_ENV=production && npm-run-all prod:client prod:server && pm2 start .tmp/server.js --name=\"appname\" && pm2 logs appname",
     "prod:client": "webpack --config webpack.prod.config.js",
     "prod:server": "webpack --config webpack.prod.server.config.js",
     "lint": "eslint ./src --quiet"
