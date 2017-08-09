@@ -9,8 +9,9 @@
     "start": "npm-run-all --parallel start:client start:server",
     "start:client": "webpack-dev-server --config webpack.dev.config.js",
     "start:server": "rm -rf ./.build && webpack --config webpack.dev.server.config.js",
-    "prod": "pm2 stop appname && export NODE_ENV=production && rm -rf .tmp && pm2 start scripts/runapp.sh --name=\"appname\" && pm2 logs appname",
-    "prod_ws": "export NODE_ENV=production && rm -rf .tmp && pm2 start scripts/runapp.sh --name=\"appname\" && pm2 logs appname",
+    "prod": "rm -rf .tmp && export NODE_ENV=production && npm-run-all prod:client prod:server && pm2 start .tmp/server.js --name=\"appname\"",
+    "prod:client": "webpack --config webpack.prod.config.js",
+    "prod:server": "webpack --config webpack.prod.server.config.js",
     "lint": "eslint ./src --quiet"
   },
   "dependencies": {

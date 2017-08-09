@@ -2,7 +2,6 @@
 import express from 'express';
 import path from 'path';
 
-import webpack from 'webpack';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import Helmet from 'react-helmet';
@@ -26,26 +25,18 @@ import { AsyncComponentProvider, createAsyncContext } from 'react-async-componen
 import asyncBootstrapper from 'react-async-bootstrapper';
 import serialize from 'serialize-javascript';
 
-let webpackConfig = null;
-let webpackStats = null;
-
 const NODE_ENV = require('../envConfig').NODE_ENV;
 const PORT = require('../envConfig').PORT - 1;
 const LOCAL_IP = require('../envConfig').LOCAL_IP;
 
-if (NODE_ENV === 'production') {
-  webpackConfig = require('../webpack.prod.config.js');
-} else {
-  webpackConfig = require('../webpack.dev.config.js');
-}
-
 let pathToJSFile = `//${ LOCAL_IP }:${ PORT }/js/app.js`;
 
-const PUBLIC_PATH = webpackConfig.PUBLIC_PATH;
+const PARAM_PUBLIC = '/.tmp';
 
-delete webpackConfig.PUBLIC_PATH;
+const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
 
-const compiler = webpack(webpackConfig);
+let webpackStats = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.tmp/stats.json'), 'utf8'));
+
 const isProduction = NODE_ENV === 'production';
 
 const app = express();
@@ -71,16 +62,6 @@ if (isProduction) {
       minifyJS:                  true
     }
   }));
-
-  compiler.run((err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      webpackStats = require(`${ PUBLIC_PATH }/stats.json`);
-
-      console.log('build created <<<');
-    }
-  });
 }
 
 app.get('*', (req, res) => {

@@ -1,18 +1,17 @@
-import path from 'path';
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import StatsPlugin from 'stats-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+var path = require('path');
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var StatsPlugin = require('stats-webpack-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer');
 
 const PARAM_PUBLIC = '/.tmp';
 
-const SOURCE_PATH = path.resolve(__dirname);
 const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
+const SOURCE_PATH = path.resolve(__dirname);
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
-  PUBLIC_PATH,
   context: SOURCE_PATH,
   devtool: 'hidden-source-map',
   entry: {
@@ -27,7 +26,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.js?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -92,15 +91,6 @@ module.exports = {
         loader: 'file-loader',
         options: {
           name: '/[path][name].[ext]'
-        }
-      },
-      {
-        test: /\.svg$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: '/[path][name].[ext]',
-          mimetype: 'image/svg+xml'
         }
       },
       {

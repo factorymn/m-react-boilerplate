@@ -1,1 +1,0 @@
-babel-node --plugins system-import-transformer -- server/index.js

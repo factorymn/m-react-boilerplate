@@ -20,6 +20,8 @@ import {
 
 import { DummyComponent } from '../../components';
 
+import IconFlag from '-!babel-loader!svg-react-loader!./guard.svg';
+
 @connect(state => ({
   testData: state.testReducer
 }), dispatch => ({
@@ -61,6 +63,7 @@ export default class InitialContainer extends Component {
         <br />
         <Link to="/another">
           go to another page!
+          <IconFlag />
         </Link>
         {this.props.testData.foo}
       </div>
