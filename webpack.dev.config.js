@@ -13,7 +13,6 @@ module.exports = {
     app: [
       'react-hot-loader/patch',
       'webpack-dev-server/client?http://' + LOCAL_IP + ':' + PORT + '',
-      "webpack/hot/only-dev-server",
       './src/app.js',
     ]
   },
