@@ -2,7 +2,7 @@ import { colors } from 'material-ui/styles';
 import { fade }   from 'material-ui/utils/colorManipulator';
 import Spacing    from 'material-ui/styles/spacing';
 
-module.exports = {
+module.exports = { // eslint-disable-line no-undef
   spacing: Spacing,
   fontFamily: 'system, -apple-system, Roboto, Helvetica, Arial, sans-serif',
   palette: {

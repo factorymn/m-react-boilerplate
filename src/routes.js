@@ -5,11 +5,11 @@ import {
 } from './actions';
 
 const AsyncInitialContainer = asyncComponent({
-  resolve: () => System.import('./containers/InitialContainer/InitialContainer')
+  resolve: () => System.import('./containers/InitialContainer/InitialContainer') // eslint-disable-line no-undef
 });
 
 const AsyncAnotherContainer = asyncComponent({
-  resolve: () => System.import('./containers/AnotherContainer/AnotherContainer')
+  resolve: () => System.import('./containers/AnotherContainer/AnotherContainer') // eslint-disable-line no-undef
 });
 
 export default [

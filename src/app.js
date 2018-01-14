@@ -13,7 +13,7 @@ import { decode } from './utils/base64';
 
 import configureStore from './store/configureStore';
 
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production'; // eslint-disable-line no-undef
 
 // Needed for React Developer Tools
 if (!isProd) {
@@ -24,7 +24,7 @@ const rehydrateState = window.__ASYNC_COMPONENTS_STATE__;
 const mountNode = document.getElementById('app');
 
 const renderApp = () => {
-  const App = require('./containers/App/App').default; //eslint-disable-line global-require
+  const App = require('./containers/App/App').default; // eslint-disable-line no-undef
 
   const initialState = window.__INITIAL_STATE__ ? JSON.parse(decode(window.__INITIAL_STATE__)) : {};
   const history = createHistory();
@@ -47,19 +47,19 @@ const renderApp = () => {
   });
 };
 
-if (process.env.NODE_ENV === 'development' && module.hot) {
+if (process.env.NODE_ENV === 'development' && module.hot) { // eslint-disable-line no-undef
   const reRenderApp = () => {
     try {
       renderApp();
     } catch (error) {
-      const RedBox = require('redbox-react').default; //eslint-disable-line global-require
+      const RedBox = require('redbox-react').default; // eslint-disable-line no-undef
 
       render(<RedBox error={error} />, mountNode);
     }
   };
 
-  module.hot.accept('./containers/App/App', () => {
-    setImmediate(() => {
+  module.hot.accept('./containers/App/App', () => { // eslint-disable-line no-undef
+    setImmediate(() => { // eslint-disable-line no-undef
       // Preventing the hot reloading error from react-router
       unmountComponentAtNode(mountNode);
 

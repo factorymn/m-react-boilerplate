@@ -1,7 +1,7 @@
 import React from 'react';
 
-if (global.IS_BROWSER) {
-  require('./App.styl'); //eslint-disable-line global-require
+if (global.IS_BROWSER) { // eslint-disable-line no-undef
+  require('./App.styl'); // eslint-disable-line no-undef
 }
 
 import { Route } from 'react-router-dom';

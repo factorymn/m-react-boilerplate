@@ -157,11 +157,8 @@ module.exports = {
   ],
   target: 'web',
   stats: {
-    colors: true,
     hash: false,
     version: false,
-    unused: true,
-    chunks: false,
     children: false
   }
 };

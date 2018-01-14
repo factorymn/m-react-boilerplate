@@ -1,5 +1,5 @@
-if (global.IS_BROWSER) {
-  require('./InitialContainer.styl'); // eslint-disable-line global-require
+if (global.IS_BROWSER) { // eslint-disable-line no-undef
+  require('./InitialContainer.styl'); // eslint-disable-line no-undef
 }
 
 import { Link } from 'react-router-dom';
