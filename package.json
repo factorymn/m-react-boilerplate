@@ -12,7 +12,10 @@
     "prod": "rm -rf .tmp && export NODE_ENV=production && npm-run-all prod:client prod:server && pm2 start .tmp/server.js --name=\"appname\" && pm2 logs appname",
     "prod:client": "webpack --config webpack.prod.config.js",
     "prod:server": "webpack --config webpack.prod.server.config.js",
-    "lint": "eslint ./src --quiet"
+    "lint": "eslint ./src --quiet",
+    "test": "export NODE_ENV=test && jest --coverage",
+    "test:watch": "export NODE_ENV=test && jest --watchAll",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "dependencies": {
     "autoprefixer-loader": "^3.2.0",
@@ -40,6 +43,7 @@
     "better-npm-run": "^0.1.0",
     "clean-webpack-plugin": "^0.1.9",
     "copy-webpack-plugin": "^4.0.1",
+    "coveralls": "2.13.1",
     "css-loader": "^0.28.0",
     "ejs": "^2.5.5",
     "eslint": "^4.15.0",
@@ -53,6 +57,7 @@
     "ghooks": "^2.0.0",
     "history": "^4.6.1",
     "html-webpack-plugin": "^2.22.0",
+    "jest-cli": "20.0.4",
     "lodash": "^4.13.1",
     "material-ui": "^0.20.0",
     "prop-types": "^15.5.8",
@@ -95,9 +100,36 @@
     "webpack-node-externals": "^1.6.0",
     "webpack-vendor-chunk-plugin": "^1.0.0"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!src/**/*.test.{js,jsx}"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 98,
+        "branches": 91,
+        "functions": 98,
+        "lines": 98
+      }
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ],
+    "testRegex": "tests/.*\\.test\\.js$",
+    "setupTestFrameworkScriptFile": "<rootDir>/src/setupTest.js"
+  },
   "config": {
     "ghooks": {
       "pre-commit": "eslint ./src --quiet"
     }
+  },
+  "devDependencies": {
+    "babel-plugin-dynamic-import-node": "^1.2.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "react-addons-test-utils": "^15.6.2"
   }
 }

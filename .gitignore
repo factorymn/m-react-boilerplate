@@ -3,8 +3,7 @@ node_modules
 npm-debug.log
 .idea
 yarn.lock
+coverage
 
 log/*
-smarticon-frontend.zip
-public/staging
 .build
