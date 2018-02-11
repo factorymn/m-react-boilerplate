@@ -1,5 +1,5 @@
 if (global.IS_BROWSER) {
-  require('./AnotherContainer.styl');
+  require('./AboutPage.styl');
 }
 
 import { Link } from 'react-router-dom';

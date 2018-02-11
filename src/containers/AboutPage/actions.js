@@ -1,4 +1,4 @@
-import * as actionTypes from '../constants/TestConstants';
+import * as actionTypes from './constants';
 
 export const fetchAction = () => (dispatch) => new Promise((resolve) => {
   setTimeout(() => {

@@ -1,8 +1,16 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import immutableStateMiddleware from 'redux-immutable-state-invariant';
-import rootReducer from '../reducers';
 import { routerMiddleware } from 'react-router-redux';
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
+
+import homePageReducer from '../containers/HomePage/reducer';
+
+const rootReducer = combineReducers({
+  homePageReducer,
+  routing: routerReducer
+});
 
 const middlewares = [thunkMiddleware];
 

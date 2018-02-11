@@ -1,5 +1,5 @@
 if (global.IS_BROWSER) {
-  require('./InitialContainer.styl');
+  require('./HomePage.styl');
 }
 
 import { Link } from 'react-router-dom';
@@ -57,7 +57,7 @@ export default class InitialContainer extends Component {
           <meta property="og:description" content="Boilerplate with server side rendering" />
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
-        message: {this.props.testData.message} {this.props.testData.number}
+        message:
         <br />
         <DummyComponent />
         <br />
@@ -65,7 +65,6 @@ export default class InitialContainer extends Component {
           go to another page!
           <Logo />
         </Link>
-        {this.props.testData.foo}
       </div>
     );
   }

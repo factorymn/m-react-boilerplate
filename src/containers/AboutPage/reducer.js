@@ -1,4 +1,4 @@
-import * as actionTypes from '../constants/TestConstants';
+import * as actionTypes from './constants';
 
 const initialState = {
   message: '',

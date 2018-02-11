@@ -11,10 +11,8 @@ import asyncBootstrapper from 'react-async-bootstrapper';
 
 import configureStore from './store/configureStore';
 
-const isProd = process.env.NODE_ENV === 'production';
-
 // Needed for React Developer Tools
-if (!isProd) {
+if (process.env.NODE_ENV !== 'production') {
   window.React = React;
 }
 

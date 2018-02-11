@@ -4,12 +4,12 @@ import {
   TestActions,
 } from './actions';
 
-const AsyncInitialContainer = asyncComponent({
-  resolve: () => System.import('./containers/InitialContainer/InitialContainer')
+const AsyncHomePage = asyncComponent({
+  resolve: () => System.import('./containers/HomePage/HomePage')
 });
 
-const AsyncAnotherContainer = asyncComponent({
-  resolve: () => System.import('./containers/AnotherContainer/AnotherContainer')
+const AsyncAboutPage = asyncComponent({
+  resolve: () => System.import('./containers/AboutPage/AboutPage')
 });
 
 export default [
@@ -20,11 +20,11 @@ export default [
       ({ store }) => store.dispatch(TestActions.fetchAction()),
       ({ store }) => store.dispatch(TestActions.anotherFetchAction())
     ],
-    component: AsyncInitialContainer,
+    component: AsyncHomePage,
   },
   {
-    path: '/another/test',
+    path: '/about',
     exact: true,
-    component: AsyncAnotherContainer,
+    component: AsyncAboutPage,
   }
 ];
