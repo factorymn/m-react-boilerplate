@@ -8,6 +8,7 @@
     "linebreak-style": [2, "unix"],
     "quotes": [2, "single"],
     "no-console": 0,
+    "no-undef": 0,
     "react/display-name": 1,
     "react/forbid-prop-types": 1,
     "react/jsx-boolean-value": 1,

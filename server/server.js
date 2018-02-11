@@ -1,4 +1,3 @@
-/* eslint-disable global-require */
 import express from 'express';
 import path from 'path';
 
@@ -11,13 +10,10 @@ import { matchRoutes } from 'react-router-config';
 
 import createHistory from 'history/createMemoryHistory';
 import { App } from '../src/containers';
-import config from '../src/config';
-import isSupportedBrowser from '../src/utils/isSupportedBrowser';
 import fs from 'fs';
 
 import { Provider } from 'react-redux';
 
-import { encode } from '../src/utils/base64';
 import configureStore from '../src/store/configureStore';
 import routes from '../src/routes';
 
@@ -40,8 +36,6 @@ let webpackStats = null;
 const isProduction = NODE_ENV === 'production';
 
 const app = express();
-
-console.log(`>>> LAUNCHED MODE: ${ NODE_ENV }`);
 
 app.set('view engine', 'ejs');
 
@@ -67,18 +61,6 @@ if (isProduction) {
 }
 
 app.get('*', (req, res) => {
-  if (isProduction && !isSupportedBrowser(req.headers['user-agent'], config.extremeSupportedBrowsers)) {
-    fs.readFile(path.join(__dirname, '..', 'views', '../views/non_supported_browsers.html'), 'utf8', (err, content) => {
-      if (err) {
-        return res.status(500).send(err);
-      }
-
-      res.send(content);
-    });
-
-    return;
-  }
-
   const history = createHistory();
   const store = configureStore(history, {});
 
@@ -134,7 +116,7 @@ app.get('*', (req, res) => {
       helmetData,
       cssFileName,
       asyncState: serialize(asyncState),
-      state: encode(JSON.stringify(store.getState()))
+      state: serialize(store.getState())
     };
 
     res.status(status).render('layout', layoutData);

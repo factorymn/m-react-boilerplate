@@ -1,5 +1,5 @@
-if (global.IS_BROWSER) { // eslint-disable-line no-undef
-  require('./InitialContainer.styl'); // eslint-disable-line no-undef
+if (global.IS_BROWSER) {
+  require('./InitialContainer.styl');
 }
 
 import { Link } from 'react-router-dom';
@@ -20,7 +20,7 @@ import {
 
 import { DummyComponent } from '../../components';
 
-import IconFlag from '-!babel-loader!svg-react-loader!./guard.svg';
+import Logo from '-!babel-loader!svg-react-loader!./svg-logo.svg';
 
 @connect(state => ({
   testData: state.testReducer
@@ -63,7 +63,7 @@ export default class InitialContainer extends Component {
         <br />
         <Link to="/another/test">
           go to another page!
-          <IconFlag />
+          <Logo />
         </Link>
         {this.props.testData.foo}
       </div>

@@ -6,7 +6,7 @@ import { routerMiddleware } from 'react-router-redux';
 
 const middlewares = [thunkMiddleware];
 
-if (process.env.NODE_ENV !== 'production') { // eslint-disable-line no-undef
+if (process.env.NODE_ENV !== 'production') {
   middlewares.push(immutableStateMiddleware());
 }
 
@@ -18,7 +18,7 @@ export default function configureStore(history, initialState) {
     initialState,
     compose(
       applyMiddleware(...middlewares),
-      global.IS_BROWSER && window.devToolsExtension ? window.devToolsExtension() : f => f // eslint-disable-line no-undef
+      global.IS_BROWSER && window.devToolsExtension ? window.devToolsExtension() : f => f
     )
   );
 }
