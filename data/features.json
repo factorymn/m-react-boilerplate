@@ -1,0 +1,20 @@
+[
+  {
+    "name": "redux",
+    "title": "Redux",
+    "description": "redux is good",
+    "hasMore": true
+  },
+  {
+    "name": "hmr",
+    "title": "Hot module replacement",
+    "description": "hot module replacemnt",
+    "hasMore": true
+  },
+  {
+    "name": "ssr",
+    "title": "server side rendering",
+    "description": "server side rendering",
+    "hasMore": true
+  }
+]

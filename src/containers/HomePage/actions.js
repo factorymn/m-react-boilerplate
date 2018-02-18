@@ -1,13 +1,16 @@
 import * as actionTypes from './constants';
+import { apiCall } from '../../utils';
 
-export const fetchList = () => (dispatch) => new Promise((resolve) => {
-  setTimeout(() => {
-    dispatch({
-      type: actionTypes.FETCH_LIST_SUCCESS,
-      message: 'ojoj'
-    });
-
-    resolve();
-  }, 2000);
-});
-
+export const fetchList = () => (dispatch) => {
+  return apiCall({
+    path: '/data',
+    method: 'GET'
+  }).then(({ data }) => {
+    if (data) {
+      dispatch({
+        type: actionTypes.FETCH_LIST_SUCCESS,
+        features: data
+      });
+    }
+  });
+};

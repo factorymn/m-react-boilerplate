@@ -21,6 +21,8 @@ import { AsyncComponentProvider, createAsyncContext } from 'react-async-componen
 import asyncBootstrapper from 'react-async-bootstrapper';
 import serialize from 'serialize-javascript';
 
+import features from '../data/features.json';
+
 const NODE_ENV = require('../envConfig').NODE_ENV;
 const PORT = require('../envConfig').PORT - 1;
 const LOCAL_IP = require('../envConfig').LOCAL_IP;
@@ -61,6 +63,12 @@ if (isProduction) {
 }
 
 app.get('*', (req, res) => {
+  if (req.path === '/data') {
+    res.json(features);
+
+    return;
+  }
+
   const history = createHistory();
   const store = configureStore(history, {});
 

@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 
 import * as HomePageActions from './actions';
 
-import Logo from '-!babel-loader!svg-react-loader!./svg-logo.svg';
+import Logo from './svg-logo.svg';
 
 @connect(state => ({
   homePage: state.homePageReducer
@@ -29,6 +29,7 @@ export default class HomePage extends Component {
   };
 
   render() {
+    console.log('this.props.homePage ==>', this.props.homePage);
     return (
       <div className="c-home-page-root">
         <Helmet>
@@ -40,8 +41,21 @@ export default class HomePage extends Component {
         <Logo width="30" />
         <Link to="/about/test">
           go to another page!
-          {this.props.homePage.message}
         </Link>
+        <ul>
+          {
+            this.props.homePage.features.map(feature => (
+              <li key={feature.name}>
+                <h3>
+                  {feature.title}
+                </h3>
+                <p>
+                  {feature.description}
+                </p>
+              </li>
+            ))
+          }
+        </ul>
       </div>
     );
   }

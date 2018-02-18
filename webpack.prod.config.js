@@ -103,6 +103,17 @@ module.exports = {
           name: '/[path][name].[ext]'
         }
       },
+      {
+        test:  /\.svg$/,
+        use: [
+          {
+            loader: 'babel-loader'
+          },
+          {
+            loader: 'svg-react-loader',
+          }
+        ]
+      },
     ]
   },
   resolve: {

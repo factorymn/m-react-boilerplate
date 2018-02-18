@@ -3,7 +3,7 @@ import request          from 'axios';
 
 export default (params) => {
   const method = params.method;
-  const apiHost = 'http://148.251.153.226:1348';
+  const apiHost = 'http://localhost:3223';
 
   const query = params.query ? `?${ qs.stringify(params.query) }` : '';
 
