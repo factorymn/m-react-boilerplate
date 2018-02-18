@@ -1,4 +1,3 @@
-const prefix = 'TEST_';
+const prefix = 'homePage/';
 
-export const FETCH_DATA = `${ prefix }FETCH_DATA`;
-export const ANOTHER_FETCH_DATA = `${ prefix }ANOTHER_FETCH_DATA`;
+export const FETCH_LIST_SUCCESS = `${ prefix }FETCH_LIST_SUCCESS`;

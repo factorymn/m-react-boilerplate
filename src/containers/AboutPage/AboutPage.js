@@ -4,24 +4,22 @@ if (global.IS_BROWSER) {
 
 import { Link } from 'react-router-dom';
 
-import React, {
-  Component
-} from 'react';
+import React, { Component } from 'react';
 
-// import Type from 'prop-types';
+// import PropTypes from 'prop-types';
 
-export default class AnotherContainer extends Component {
+export default class AboutPage extends Component {
   /**
    * Validates passed properties
    */
   static propTypes = {};
 
   /**
-   * Renders 'AnotherContainer' component
+   * Renders 'AboutPage' component
    */
   render() {
     return (
-      <div className="c-another-container-root">
+      <div className="c-about-page-root">
         Another page=>
         <Link to="/">
           go to main page

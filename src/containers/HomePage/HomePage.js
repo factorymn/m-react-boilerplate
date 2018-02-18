@@ -5,65 +5,42 @@ if (global.IS_BROWSER) {
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-import React, {
-  Component,
-} from 'react';
+import React, { Component } from 'react';
 
-import Type from 'prop-types';
+import PropTypes from 'prop-types';
 
-import { bindActionCreators }       from 'redux';
-import { connect }                  from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import {
-  TestActions,
-} from '../../actions';
-
-import { DummyComponent } from '../../components';
+import * as HomePageActions from './actions';
 
 import Logo from '-!babel-loader!svg-react-loader!./svg-logo.svg';
 
 @connect(state => ({
-  testData: state.testReducer
+  homePage: state.homePageReducer
 }), dispatch => ({
   dispatch,
-  actions: bindActionCreators(TestActions, dispatch)
+  actions: bindActionCreators(HomePageActions, dispatch)
 }))
-export default class InitialContainer extends Component {
-  /**
-   * Validates passed properties
-   */
+export default class HomePage extends Component {
   static propTypes = {
-    actions: Type.object,
-    testData: Type.object
+    actions: PropTypes.object,
+    homePage: PropTypes.object
   };
 
-  /**
-   * Invokes after the initial rendering of component
-   */
-  componentDidMount() {
-    if (!this.props.testData.message) this.props.actions.fetchAction();
-  }
-
-  /**
-   * Renders 'InitialContainer' component
-   */
   render() {
     return (
-      <div className="c-initial-container-root">
+      <div className="c-home-page-root">
         <Helmet>
-          <title>Manufactura boilerplate</title>
+          <title>Manufactura react boilerplate</title>
           <meta property="og:title" content="Manufactura boilerplate" />
           <meta property="og:image" content="http://factory.mn/freeze/uUVpNVS2rspdiyDx-6nOkyIct4A.jpg" />
           <meta property="og:description" content="Boilerplate with server side rendering" />
-          <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
-        message:
-        <br />
-        <DummyComponent />
-        <br />
-        <Link to="/another/test">
+        <Logo width="30" />
+        <Link to="/about/test">
           go to another page!
-          <Logo />
+          {this.props.homePage.message}
         </Link>
       </div>
     );

@@ -1,9 +1,9 @@
 import * as actionTypes from './constants';
 
-export const fetchAction = () => (dispatch) => new Promise((resolve) => {
+export const fetchList = () => (dispatch) => new Promise((resolve) => {
   setTimeout(() => {
     dispatch({
-      type: actionTypes.FETCH_DATA,
+      type: actionTypes.FETCH_LIST_SUCCESS,
       message: 'ojoj'
     });
 
@@ -11,13 +11,3 @@ export const fetchAction = () => (dispatch) => new Promise((resolve) => {
   }, 2000);
 });
 
-export const anotherFetchAction = () => (dispatch) => new Promise((resolve) => {
-  setTimeout(() => {
-    dispatch({
-      type: actionTypes.ANOTHER_FETCH_DATA,
-      number: 33
-    });
-
-    resolve();
-  }, 3000);
-});

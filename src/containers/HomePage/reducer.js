@@ -15,27 +15,22 @@ const initialState = {
       hasMore: true
     }
   ],
+  message: ''
 };
 
 export default function homePage(state = initialState, action) {
   const {
     message,
-    number,
     type
   } = action;
 
   switch (type) {
-    case actionTypes.FETCH_DATA:
+    case actionTypes.FETCH_LIST_SUCCESS:
       return {
         ...state,
         message
       };
 
-    case actionTypes.ANOTHER_FETCH_DATA:
-      return {
-        ...state,
-        number
-      };
     default:
       return state;
   }
