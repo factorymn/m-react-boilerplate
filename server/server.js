@@ -43,6 +43,11 @@ app.set('view engine', 'ejs');
 
 app.set('views', path.join(process.cwd(), 'views'));
 
+import { parse as parseUrl } from 'url';
+
+console.log('routes ==>', routes);
+import { ReduxAsyncConnect, loadOnServer, reducer as reduxAsyncConnect } from 'redux-connect'
+
 if (isProduction) {
   app.use(express.static(PUBLIC_PATH));
 
@@ -62,6 +67,22 @@ if (isProduction) {
   webpackStats = JSON.parse(fs.readFileSync(path.join(process.cwd(), '.tmp/stats.json'), 'utf8'));
 }
 
+function createPage(html, store) {
+  return `
+    <!doctype html>
+    <html>
+      <body>
+        <div id="app">${html}</div>
+
+        <!-- its a Redux initial data -->
+        <script type="text/javascript">
+          window.__data=${serialize(store.getState())};
+        </script>
+      </body>
+    </html>
+  `
+}
+
 app.get('*', (req, res) => {
   if (req.path === '/data') {
     res.json(features);
@@ -69,66 +90,94 @@ app.get('*', (req, res) => {
     return;
   }
 
+  const url = req.originalUrl || req.url
+  const location = parseUrl(url)
+
   const history = createHistory();
   const store = configureStore(history, {});
 
-  const asyncContext = createAsyncContext();
+  loadOnServer({ store, location, routes })
+    .then(() => {
+      console.log('==> OOJOJOOJ!!!!!!');
+      const context = {}
 
-  const routerContext = {};
+      // 2. use `ReduxAsyncConnect` to render component tree
+      const appHTML = renderToString(
+        <Provider store={store} key="provider">
+          <StaticRouter location={location} context={context}>
+            <ReduxAsyncConnect routes={routes} />
+          </StaticRouter>
+        </Provider>
+      )
 
-  const appJSX = (
-    <AsyncComponentProvider asyncContext={asyncContext}>
-      <Provider store={store}>
-        <StaticRouter location={req.url} context={routerContext}>
-          <App />
-        </StaticRouter>
-      </Provider>
-    </AsyncComponentProvider>
-  );
+      // handle redirects
+      if (context.url) {
+        req.header('Location', context.url)
+        return res.send(302)
+      }
 
-  const branch = matchRoutes(routes, req.url);
+      // 3. render the Redux initial data into the server markup
+      const html = createPage(appHTML, store)
+      res.send(html)
+    })
 
-  let promisesArray = [];
-
-  if (branch.length && branch[0].route.initialFetchData) {
-    promisesArray = promisesArray.concat(branch[0].route.initialFetchData.map(promise => promise({
-      store,
-      location: req.url
-    })));
-  }
-
-  Promise.all(promisesArray.concat([asyncBootstrapper(appJSX)])).then(() => {
-    const appString = renderToString(appJSX);
-    const helmet = Helmet.renderStatic();
-
-    const helmetData = {
-      meta: helmet.meta.toString(),
-      title: helmet.title.toString(),
-      link: helmet.link.toString()
-    };
-
-    const asyncState = asyncContext.getState();
-
-    const status = routerContext.status === '404' ? 404 : 200;
-
-    if (webpackStats) {
-      pathToJSFile = webpackStats.assetsByChunkName.app[0];
-    }
-
-    const cssFileName = webpackStats ? webpackStats.assetsByChunkName.app[1] : '/css/app.css';
-
-    const layoutData = {
-      NODE_ENV,
-      pathToJSFile,
-      content: appString,
-      helmetData,
-      cssFileName,
-      asyncState: serialize(asyncState),
-      state: serialize(store.getState())
-    };
-
-    res.status(status).render('layout', layoutData);
-  });
+  // const asyncContext = createAsyncContext();
+  //
+  // const routerContext = {};
+  //
+  // const appJSX = (
+  //   <AsyncComponentProvider asyncContext={asyncContext}>
+  //     <Provider store={store}>
+  //       <StaticRouter location={req.url} context={routerContext}>
+  //         <App />
+  //       </StaticRouter>
+  //     </Provider>
+  //   </AsyncComponentProvider>
+  // );
+  //
+  // const branch = matchRoutes(routes, req.url);
+  //
+  // let promisesArray = [];
+  //
+  // if (branch.length && branch[0].route.initialFetchData) {
+  //   promisesArray = promisesArray.concat(branch[0].route.initialFetchData.map(promise => promise({
+  //     store,
+  //     location: req.url
+  //   })));
+  // }
+  //
+  // Promise.all(promisesArray.concat([asyncBootstrapper(appJSX)])).then(() => {
+  //   const appString = renderToString(appJSX);
+  //   const helmet = Helmet.renderStatic();
+  //
+  //   const helmetData = {
+  //     meta: helmet.meta.toString(),
+  //     title: helmet.title.toString(),
+  //     link: helmet.link.toString()
+  //   };
+  //
+  //   const asyncState = asyncContext.getState();
+  //
+  //   const status = routerContext.status === '404' ? 404 : 200;
+  //
+  //   if (webpackStats) {
+  //     pathToJSFile = webpackStats.assetsByChunkName.app[0];
+  //   }
+  //
+  //   const cssFileName = webpackStats ? webpackStats.assetsByChunkName.app[1] : '/css/app.css';
+  //
+  //   const layoutData = {
+  //     NODE_ENV,
+  //     pathToJSFile,
+  //     content: appString,
+  //     helmetData,
+  //     cssFileName,
+  //     asyncState: serialize(asyncState),
+  //     state: serialize(store.getState())
+  //   };
+  //
+  //   res.status(status).render('layout', layoutData);
+  // });
 });
 
 export default app;

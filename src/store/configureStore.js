@@ -4,10 +4,12 @@ import immutableStateMiddleware from 'redux-immutable-state-invariant';
 import { routerMiddleware } from 'react-router-redux';
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
+import { reducer as reduxAsyncConnect } from 'redux-connect'
 
 import homePageReducer from '../containers/HomePage/reducer';
 
 const rootReducer = combineReducers({
+  reduxAsyncConnect,
   homePageReducer,
   routing: routerReducer
 });
