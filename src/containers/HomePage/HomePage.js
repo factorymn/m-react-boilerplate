@@ -13,6 +13,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as HomePageActions from './actions';
+import renderRoutes from 'react-router-config/renderRoutes';
 
 import Logo from './svg-logo.svg';
 
@@ -29,7 +30,8 @@ export default class HomePage extends Component {
   };
 
   render() {
-    console.log('this.props.homePage ==>', this.props.homePage);
+    const { route } = this.props;
+
     return (
       <div className="c-home-page-root">
         <Helmet>
@@ -39,9 +41,10 @@ export default class HomePage extends Component {
           <meta property="og:description" content="Boilerplate with server side rendering" />
         </Helmet>
         <Logo width="30" />
-        <Link to="/about/test">
+        <Link to="/child">
           go to another page!
         </Link>
+        {renderRoutes(route.routes)}
         <ul>
           {
             this.props.homePage.features.map(feature => (
