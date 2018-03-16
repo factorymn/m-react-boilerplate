@@ -5,12 +5,9 @@ import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter } from 'react-router-redux';
-import { ReduxAsyncConnect } from 'redux-connect'
 
 import { AsyncComponentProvider } from 'react-async-component';
 import asyncBootstrapper from 'react-async-bootstrapper';
-
-import routes from './routes';
 
 import configureStore from './store/configureStore';
 
@@ -23,6 +20,7 @@ const rehydrateState = window.__ASYNC_COMPONENTS_STATE__;
 const mountNode = document.getElementById('app');
 
 const renderApp = () => {
+  const App = require('./containers/App/App').default;
   const initialState = window.__INITIAL_STATE__ || {};
   const history = createHistory();
   const catchedStore = configureStore(history, initialState);
@@ -32,7 +30,7 @@ const renderApp = () => {
       <AsyncComponentProvider rehydrateState={rehydrateState}>
         <Provider store={catchedStore}>
           <ConnectedRouter history={history}>
-            <ReduxAsyncConnect routes={routes} />
+            <App />
           </ConnectedRouter>
         </Provider>
       </AsyncComponentProvider>
