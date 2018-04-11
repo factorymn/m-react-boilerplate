@@ -1,5 +1,5 @@
 import React from 'react';
-import { hydrate, render, unmountComponentAtNode } from 'react-dom';
+import { render, unmountComponentAtNode } from 'react-dom';
 import { Provider } from 'react-redux';
 
 import { AppContainer } from 'react-hot-loader';
@@ -21,12 +21,13 @@ const mountNode = document.getElementById('app');
 
 const renderApp = () => {
   const App = require('./containers/App/App').default;
+
   const initialState = window.__INITIAL_STATE__ || {};
   const history = createHistory();
   const catchedStore = configureStore(history, initialState);
 
   const app = (
-    <AppContainer>
+    <AppContainer key={Math.random()}>
       <AsyncComponentProvider rehydrateState={rehydrateState}>
         <Provider store={catchedStore}>
           <ConnectedRouter history={history}>
@@ -38,7 +39,7 @@ const renderApp = () => {
   );
 
   asyncBootstrapper(app).then(() => {
-    hydrate(app, mountNode);
+    render(app, mountNode);
   });
 };
 

@@ -13,7 +13,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as HomePageActions from './actions';
-import renderRoutes from 'react-router-config/renderRoutes';
+
+import PrettyPreloader from '../../components/PrettyPreloader/index';
 
 import Logo from './svg-logo.svg';
 
@@ -29,9 +30,15 @@ export default class HomePage extends Component {
     homePage: PropTypes.object
   };
 
-  render() {
-    const { route } = this.props;
+  componentDidMount() {
+    if (!this.props.homePage.features.length) {
+      this.props.actions.fetchList();
+    }
+  }
 
+  render() {
+    const { features } = this.props.homePage;
+    console.log('features.length ==>', features.length);
     return (
       <div className="c-home-page-root">
         <Helmet>
@@ -41,13 +48,12 @@ export default class HomePage extends Component {
           <meta property="og:description" content="Boilerplate with server side rendering" />
         </Helmet>
         <Logo width="30" />
-        <Link to="/child">
+        <Link to="/about/test">
           go to another page!
         </Link>
-        {renderRoutes(route.routes)}
         <ul>
           {
-            this.props.homePage.features.map(feature => (
+            features.length ? features.map(feature => (
               <li key={feature.name}>
                 <h3>
                   {feature.title}
@@ -56,7 +62,9 @@ export default class HomePage extends Component {
                   {feature.description}
                 </p>
               </li>
-            ))
+            )) : (
+              <PrettyPreloader />
+            )
           }
         </ul>
       </div>
