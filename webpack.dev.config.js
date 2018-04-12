@@ -7,6 +7,7 @@ const LOCAL_IP = require('./envConfig').LOCAL_IP;
 const NODE_ENV = require('./envConfig').NODE_ENV;
 
 module.exports = {
+  mode: 'development',
   context: path.resolve(__dirname),
   devtool: 'inline-source-map',
   entry: {
@@ -56,9 +57,6 @@ module.exports = {
               localIdentName: '[local]',
               sourceMap: true
             }
-          },
-          {
-            loader: 'autoprefixer-loader'
           },
           {
             loader: 'stylus-loader',
@@ -132,7 +130,6 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
     new CopyWebpackPlugin([
       { from: 'images', to: 'images' }
     ]),
@@ -142,11 +139,13 @@ module.exports = {
         NODE_ENV: JSON.stringify(NODE_ENV)
       }
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      async: true,
-      children: true
-    })
   ],
+  optimization: {
+    namedModules: true, // NamedModulesPlugin()
+    splitChunks: { // CommonsChunkPlugin()
+      chunks: 'async'
+    }
+  },
   target: 'web', // Make web variables accessible to webpack, e.g. window
   stats: true, // Don't show stats in the console
 };

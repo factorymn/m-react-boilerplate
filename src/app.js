@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
+import { hydrate, unmountComponentAtNode } from 'react-dom';
 import { Provider } from 'react-redux';
 
 import { AppContainer } from 'react-hot-loader';
@@ -39,7 +39,7 @@ const renderApp = () => {
   );
 
   asyncBootstrapper(app).then(() => {
-    render(app, mountNode);
+    hydrate(app, mountNode);
   });
 };
 
@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
     } catch (error) {
       const RedBox = require('redbox-react').default;
 
-      render(<RedBox error={error} />, mountNode);
+      hydrate(<RedBox error={error} />, mountNode);
     }
   };
 

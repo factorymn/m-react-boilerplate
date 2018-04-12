@@ -14,6 +14,7 @@ const PORT = require('./envConfig').PORT;
 const LOCAL_IP = require('./envConfig').LOCAL_IP;
 
 module.exports = {
+  mode: 'production',
   context: SOURCE_PATH,
   devtool: 'hidden-source-map',
   entry: {
@@ -48,9 +49,6 @@ module.exports = {
                 minimize: true,
                 sourceMap: true
               }
-            },
-            {
-              loader: 'autoprefixer-loader'
             },
             {
               loader: 'stylus-loader',
@@ -128,8 +126,6 @@ module.exports = {
       filename: '/css/[name].[hash].css',
       allChunks: true
     }),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.optimize.ModuleConcatenationPlugin(),
     new CopyWebpackPlugin([
       { from: 'images', to: 'images' }
     ]),
@@ -160,12 +156,15 @@ module.exports = {
       chunkModules: false,
       exclude: /node_modules/
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      async: true,
-      children: true
-    }),
     // new BundleAnalyzerPlugin()
   ],
+  optimization: {
+    splitChunks: { // CommonsChunkPlugin()
+      chunks: 'async'
+    },
+    noEmitOnErrors: true, // NoEmitOnErrorsPlugin
+    concatenateModules: true //ModuleConcatenationPlugin
+  },
   target: 'web',
   stats: {
     hash: false,

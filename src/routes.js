@@ -3,11 +3,11 @@ import { asyncComponent } from 'react-async-component';
 import * as HomePageActions from './containers/HomePage/actions';
 
 const AsyncHomePage = asyncComponent({
-  resolve: () => System.import('./containers/HomePage/HomePage')
+  resolve: () => import('./containers/HomePage/HomePage')
 });
 
 const AsyncAboutPage = asyncComponent({
-  resolve: () => System.import('./containers/AboutPage/AboutPage')
+  resolve: () => import('./containers/AboutPage/AboutPage')
 });
 
 export default [

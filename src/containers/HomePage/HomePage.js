@@ -49,7 +49,7 @@ export default class HomePage extends Component {
         </Helmet>
         <Logo width="30" />
         <Link to="/about/test">
-          go to another page!
+          go to another page!78978
         </Link>
         <ul>
           {

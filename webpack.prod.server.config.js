@@ -4,6 +4,7 @@ const NODE_ENV = require('./envConfig').NODE_ENV;
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+  mode: 'production',
   entry: [ './server/index' ],
   target: 'node',
   externals: [ nodeExternals() ],
@@ -28,7 +29,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(NODE_ENV)
@@ -36,5 +36,8 @@ module.exports = {
       'global.IS_BROWSER': false
     }),
   ],
+  optimization: {
+    noEmitOnErrors: true, // NoEmitOnErrorsPlugin
+  },
   output: { path: path.join(__dirname, 'tmp'), filename: 'server.js' },
 };
