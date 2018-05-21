@@ -20,7 +20,7 @@ export default () => {
   );
 
   return (
-    <div className="app">
+    <div className="main">
       {
         routes.map((route, index) => routeWithSubRoutes(route, index))
       }
