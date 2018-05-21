@@ -6,6 +6,7 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   mode: 'production',
   entry: [ './server/index' ],
+  output: { path: path.join(__dirname, 'tmp'), filename: 'server.js' },
   target: 'node',
   externals: [ nodeExternals() ],
   module: {
@@ -38,6 +39,5 @@ module.exports = {
   ],
   optimization: {
     noEmitOnErrors: true, // NoEmitOnErrorsPlugin
-  },
-  output: { path: path.join(__dirname, 'tmp'), filename: 'server.js' },
+  }
 };

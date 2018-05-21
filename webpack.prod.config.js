@@ -5,7 +5,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var StatsPlugin = require('stats-webpack-plugin');
 // var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const PARAM_PUBLIC = '/.tmp';
+const PARAM_PUBLIC = '/tmp';
 
 const PUBLIC_PATH = path.join(__dirname, PARAM_PUBLIC);
 const SOURCE_PATH = path.resolve(__dirname);
@@ -134,20 +134,6 @@ module.exports = {
         NODE_ENV: JSON.stringify(NODE_ENV)
       },
       'global.IS_BROWSER': true,
-    }),
-    new webpack.optimize.UglifyJsPlugin({ // Optimize the JavaScript...
-      sourceMap: true,
-      mangle: true,
-      compress: {
-        sequences: true,
-        dead_code: true,
-        conditionals: true,
-        booleans: true,
-        unused: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      }
     }),
     new webpack.LoaderOptionsPlugin({
       debug: false
