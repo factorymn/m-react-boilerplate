@@ -6,6 +6,7 @@ if (global.IS_BROWSER) {
 
 import { Route } from 'react-router-dom';
 import routes from '../../routes';
+import Logo from '../../../images/logo.svg';
 
 export default () => {
   const routeWithSubRoutes = (route, index) => (
@@ -21,9 +22,18 @@ export default () => {
 
   return (
     <div className="main">
-      {
-        routes.map((route, index) => routeWithSubRoutes(route, index))
-      }
+      <Logo className="m-logo" style={styles.logo} />
+      <div>
+        {
+          routes.map((route, index) => routeWithSubRoutes(route, index))
+        }
+      </div>
     </div>
   );
+};
+
+const styles = {
+  logo: {
+    width: 450
+  }
 };

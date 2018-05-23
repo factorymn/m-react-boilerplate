@@ -16,8 +16,6 @@ import * as HomePageActions from './actions';
 
 import PrettyPreloader from '../../components/PrettyPreloader/index';
 
-import Logo from './svg-logo.svg';
-
 @connect(state => ({
   homePage: state.homePageReducer
 }), dispatch => ({
@@ -38,7 +36,7 @@ export default class HomePage extends Component {
 
   render() {
     const { features } = this.props.homePage;
-    console.log('features.length ==>', features.length);
+
     return (
       <div className="c-home-page-root">
         <Helmet>
@@ -47,7 +45,6 @@ export default class HomePage extends Component {
           <meta property="og:image" content="http://factory.mn/freeze/uUVpNVS2rspdiyDx-6nOkyIct4A.jpg" />
           <meta property="og:description" content="Boilerplate with server side rendering" />
         </Helmet>
-        <Logo width="30" />
         <Link to="/about/test">
           go to another page!78978
         </Link>
