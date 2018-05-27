@@ -26,7 +26,7 @@ PrettyPreloader.propTypes = {
 
 const styles = {
   cube: {
-    backgroundColor: 'blue'
+    backgroundColor: '#CC95C0'
   }
 };
 

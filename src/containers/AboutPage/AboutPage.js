@@ -20,10 +20,15 @@ export default class AboutPage extends Component {
   render() {
     return (
       <div className="c-about-page-root">
-        Another page=>
-        <Link to="/">
-          go to main page
-        </Link>
+        <div className="header">
+          <h1>M-React-Boilerplate</h1>
+          <p>
+            Made in Manufactura in Voronezh in Russia.
+          </p>
+          <Link to="/">
+            Go to Documentation page.
+          </Link>
+        </div>
       </div>
     );
   }

@@ -2,7 +2,7 @@ if (global.IS_BROWSER) {
   require('./HomePage.styl');
 }
 
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 import React, { Component } from 'react';
@@ -45,9 +45,18 @@ export default class HomePage extends Component {
           <meta property="og:image" content="http://factory.mn/freeze/uUVpNVS2rspdiyDx-6nOkyIct4A.jpg" />
           <meta property="og:description" content="Boilerplate with server side rendering" />
         </Helmet>
-        <Link to="/about/test">
-          go to another page!78978
-        </Link>
+        <div className="header">
+          <h1>M-React-Boilerplate</h1>
+          <p>
+            Starter boilerplate app for React/Redux stack with server side rendering. Focused on reaching optimal developer experience.
+          </p>
+        </div>
+        <hr/>
+        <h2>Installation</h2>
+        <pre>
+          yarn   <span className="dim"># (or `npm install` if you prefer npm)</span>
+        </pre>
+        <h2>Features</h2>
         <ul>
           {
             features.length ? features.map(feature => (
@@ -57,6 +66,9 @@ export default class HomePage extends Component {
                 </h3>
                 <p>
                   {feature.description}
+                  {/*<Link to="/about/test">*/}
+                  {/*go to another page!78978*/}
+                  {/*</Link>*/}
                 </p>
               </li>
             )) : (
@@ -64,6 +76,7 @@ export default class HomePage extends Component {
             )
           }
         </ul>
+
       </div>
     );
   }

@@ -20,7 +20,7 @@ export default [
     component: AsyncHomePage,
   },
   {
-    path: '/about/test',
+    path: '/about',
     exact: true,
     component: AsyncAboutPage,
   }
