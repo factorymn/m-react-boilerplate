@@ -38,7 +38,11 @@ export default class HomePage extends Component {
         <pre>
           yarn   <span className="dim"># (or `npm install` if you prefer npm)</span>
         </pre>
-        <h2>Features</h2>
+        <h2>Running in developer mode</h2>
+        <pre>
+          yarn start   <span className="dim"># (or `npm start` if you prefer npm)</span>
+        </pre>
+        <h2>Technologies and features</h2>
         <ul>
           {
             features.length && features.map(feature => (

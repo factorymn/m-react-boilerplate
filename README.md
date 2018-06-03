@@ -6,7 +6,7 @@ Starter boilerplate app for React/Redux stack with server side rendering. Focuse
 ```bash
 yarn   # (or `npm install` if you prefer npm)
 ```
-## Running in dev-mode
+## Running in developer mode
 
 ```bash
 yarn start   # (or `npm start` if you prefer npm)
