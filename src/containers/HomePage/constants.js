@@ -1,3 +1,3 @@
 const prefix = 'homePage/';
 
-export const FETCH_LIST_SUCCESS = `${ prefix }FETCH_LIST_SUCCESS`;
+export const ACTION_NAME = `${ prefix }ACTION_NAME`;

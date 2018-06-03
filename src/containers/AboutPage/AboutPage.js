@@ -3,16 +3,33 @@ if (global.IS_BROWSER) {
 }
 
 import { Link } from 'react-router-dom';
-
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as AboutPageActions from './actions';
+import PropTypes from 'prop-types';
+import PrettyPreloader from '../../components/PrettyPreloader';
 
-// import PropTypes from 'prop-types';
-
+@connect(state => ({
+  aboutPage: state.aboutPageReducer
+}), dispatch => ({
+  dispatch,
+  actions: bindActionCreators(AboutPageActions, dispatch)
+}))
 export default class AboutPage extends Component {
   /**
    * Validates passed properties
    */
-  static propTypes = {};
+  static propTypes = {
+    aboutPage: PropTypes.object,
+    actions: PropTypes.object
+  };
+
+  componentDidMount() {
+    if (!this.props.aboutPage.message) {
+      this.props.actions.fetchMessage();
+    }
+  }
 
   /**
    * Renders 'AboutPage' component
@@ -22,9 +39,10 @@ export default class AboutPage extends Component {
       <div className="c-about-page-root">
         <div className="header">
           <h1>M-React-Boilerplate</h1>
-          <p>
-            Made in Manufactura in Voronezh in Russia.
-          </p>
+          <div>
+            {this.props.aboutPage.message ? this.props.aboutPage.message : <PrettyPreloader />}
+          </div>
+          <br/>
           <Link to="/">
             Go to Documentation page.
           </Link>

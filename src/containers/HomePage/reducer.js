@@ -1,21 +1,17 @@
-import * as actionTypes from './constants';
+// import * as actionTypes from './constants';
 
-const initialState = {
-  features: []
-};
+const initialState = {};
 
 export default function homePage(state = initialState, action) {
   const {
-    features,
     type
   } = action;
-  console.log('type ==>', type);
+
   switch (type) {
-    case actionTypes.FETCH_LIST_SUCCESS:
-      return {
-        ...state,
-        features
-      };
+    // case actionTypes.ACTION_NAME:
+    //   return {
+    //     ...state,
+    //   };
 
     default:
       return state;

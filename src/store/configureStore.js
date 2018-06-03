@@ -6,9 +6,11 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
 import homePageReducer from '../containers/HomePage/reducer';
+import aboutPageReducer from '../containers/AboutPage/reducer';
 
 const rootReducer = combineReducers({
   homePageReducer,
+  aboutPageReducer,
   routing: routerReducer
 });
 

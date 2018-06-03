@@ -1,6 +1,6 @@
 import { asyncComponent } from 'react-async-component';
 
-import * as HomePageActions from './containers/HomePage/actions';
+import * as AboutPageActions from './containers/AboutPage/actions';
 
 const AsyncHomePage = asyncComponent({
   resolve: () => import('./containers/HomePage/HomePage')
@@ -14,14 +14,14 @@ export default [
   {
     path: '/',
     exact: true,
-    initialFetchData: [
-      ({ store }) => store.dispatch(HomePageActions.fetchList())
-    ],
     component: AsyncHomePage,
   },
   {
     path: '/about',
     exact: true,
     component: AsyncAboutPage,
+    initialFetchData: [
+      ({ store }) => store.dispatch(AboutPageActions.fetchMessage())
+    ],
   }
 ];
