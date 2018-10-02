@@ -12,6 +12,8 @@ yarn   # (or `npm install` if you prefer npm)
 yarn start   # (or `npm start` if you prefer npm)
 ```
 
+Open up http://localhost:3223/ (you can change the port in the `envConfig.js` file
+
 ## Technologies and features
 
 <dl>
